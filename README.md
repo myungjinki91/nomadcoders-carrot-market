@@ -89,3 +89,13 @@ Tailwind CSS를 직접 만든 사람도, CSS와 Markup을 섞다니!!! 난리날
 반응형, 다크모드 등등 다 준비되어 있습니다.
 
 많은 회사들에서 사용합니다.
+
+## 3.1 IntelliSense
+
+간단한 것들 만들어봅시다.
+
+Visual Studio Code Extension, Tailwind CSS IntelliSense 설치
+
+그러면 이 Extension이 tailwind.config.ts를 확인
+
+Auto complete: option + esc
