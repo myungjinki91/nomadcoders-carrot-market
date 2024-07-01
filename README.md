@@ -99,3 +99,77 @@ Visual Studio Code Extension, Tailwind CSS IntelliSense 설치
 그러면 이 Extension이 tailwind.config.ts를 확인
 
 Auto complete: option + esc
+
+## 3.2 Card Component
+
+1 container + 4 row + each column
+
+```tsx
+export default function Home() {
+  return (
+    <main>
+      <div>
+        <div>
+          <div>
+            <span>In transit</span>
+            <span>Coolblue</span>
+          </div>
+          <div />
+        </div>
+        <div>
+          <span>Time</span>
+          <span>9:30-10:30</span>
+        </div>
+        <div>
+          <div />
+          <div />
+        </div>
+        <div>
+          <span>Expected</span>
+          <span>Sorting center</span>
+          <span>In transit</span>
+          <span>Delivered</span>
+        </div>
+      </div>
+    </main>
+  );
+}
+```
+
+작업 후
+
+```tsx
+export default function Home() {
+  return (
+    <main className="bg-gray-300 h-screen flex items-center justify-center p-5">
+      <div className="bg-white shadow-lg p-5 rounded-2xl w-full">
+        <div className="flex justify-between items-center">
+          <div className="flex flex-col">
+            <span className="text-gray-600 font-semibold -mb-1">
+              In transit
+            </span>
+            <span className="text-4xl font-semibold">Coolblue</span>
+          </div>
+          <div className="size-12 rounded-full bg-orange-400" />
+        </div>
+        <div className="my-2 flex items-center gap-2">
+          <span className="bg-green-400 text-white uppercase px-2.5 py-1.5 text-xs font-medium rounded-full ">
+            Today
+          </span>
+          <span>9:30-10:30</span>
+        </div>
+        <div className="relative">
+          <div className="bg-gray-200 absolute rounded-full w-full h-2" />
+          <div className="bg-green-400 absolute rounded-full w-2/3 h-2" />
+        </div>
+        <div className="flex justify-between items-center mt-5 text-gray-600">
+          <span>Expected</span>
+          <span>Sorting center</span>
+          <span>In transit</span>
+          <span className="text-gray-400">Delivered</span>
+        </div>
+      </div>
+    </main>
+  );
+}
+```
