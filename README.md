@@ -69,3 +69,23 @@ TypeScript를 씁시다!
 ```
 Yes Yes Yes No Yes No
 ```
+
+# 3 TAILWIND
+
+## 3.0 Introduction
+
+디자이너 없이 멋진 CSS를 빠르게 만들고 싶다면 CSS Framework를 사용해야 합니다.
+
+그 중 멋지고 멋진 Tailwind CSS를 배워봅시다.
+
+Utility First는 짧은 class name이 엄청 많다.
+
+Bootstrap, Foundation은 기본적인 UI를 제공해서 비슷비슷합니다. 하지만 Tailwind CSS는 아무것도 제공하지 않습니다.
+
+직접 class를 만들려먼 class 이름도 고민해야하고, 값도 고민해야 합니다.
+
+Tailwind CSS를 직접 만든 사람도, CSS와 Markup을 섞다니!!! 난리날 것을 알았지만, 그래도 한 번 써보라고 했다.
+
+반응형, 다크모드 등등 다 준비되어 있습니다.
+
+많은 회사들에서 사용합니다.
