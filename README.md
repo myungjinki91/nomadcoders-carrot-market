@@ -221,3 +221,30 @@ export default function Home() {
   );
 }
 ```
+
+## 3.4 Tailwind Variables
+
+ring, —tw-ring-offset-shadow, —tw-ring-shadow
+
+가끔 ring처럼 여러 변수를 필요로하는 속성을 만나게 될 거에요.
+
+bg-black에는 —tw-bg-opacity가 있는데요 bg-opacity를 설정하면 CSS는 바꾸지 않지만 변수를 설정할 수 있습니다.
+
+```tsx
+export default function Home() {
+  return (
+    <main className="bg-gray-100 h-screen flex items-center justify-center p-5">
+      <div className="bg-white shadow-lg p-5 rounded-3xl w-full max-w-screen-sm flex flex-col gap-2">
+        <input
+          className="w-full rounded-full h-10 bg-gray-200 pl-5 focus:outline-none ring ring-transparent focus:ring-orange-500 focus:ring-offset-2 transition-shadow placeholder:text-red-600 placeholder:drop-shadow"
+          type="text"
+          placeholder="Search here..."
+        />
+        <button className="bg-black text-white py-2 rounded-full active:scale-90 transition-transform font-medium  outline-none">
+          Search
+        </button>
+      </div>
+    </main>
+  );
+}
+```
