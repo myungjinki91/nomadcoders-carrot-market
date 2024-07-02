@@ -445,7 +445,7 @@ https://tailwindcss.com/docs/adding-custom-styles
 <button className="rounded-sexy-name mt-tomato">Submit</button>
 ```
 
-```
+```tsx
 import type { Config } from "tailwindcss";
 
 const config: Config = {
@@ -467,5 +467,42 @@ const config: Config = {
   plugins: [],
 };
 export default config;
-
 ```
+
+## 3.11 Directives
+
+https://tailwindcss.com/docs/functions-and-directives
+
+우리가 className에 추가한 CSS는 utilities
+
+base는 reset과 비슷
+
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+
+component는??
+
+@apply는?? 분리된 컴포넌트를 위한 것.
+
+```css
+.btn {
+  @apply w-full bg-black;
+}
+```
+
+```html
+<div className="btn" />
+```
+
+@layer는 base에 추가할때 사용
+
+```html
+@layer base { a { @apply text-blue-500; } }
+```
+
+@tailwind component는???
+
+layer, base 등 base를 수정하기 위해 layer와 apply를 한 것들을 base는 내버려두고 component에서 해라~~
