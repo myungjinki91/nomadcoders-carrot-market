@@ -518,3 +518,23 @@ ex) daisyUI, tailwind CSS Form
 ## 3.13 Conclusions
 
 앞으로 만들어가면서 많이 사용할거라 금방 익숙해질 겁니다.
+
+# 4 AUTHENTICATION UI
+
+## 4.0 Home Screen
+
+- 로그아웃 했을 때 페이지
+- 로그인 페이지
+- 회원가입 페이지
+- SMS 인증 로그인 페이지
+
+만들겁니다.
+
+다크모드만 할 겁니다.
+
+반응형 많이 안할겁니다.
+
+- Tailwind CSS
+  - underline-offset-4
+  - \*:
+  - my-auto, mx-auto
