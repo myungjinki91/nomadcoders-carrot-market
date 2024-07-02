@@ -423,3 +423,49 @@ export default function Home() {
   );
 }
 ```
+
+## 3.10 JIT
+
+Tailwind CSS가 수만가지 CSS class를 준비해 둔 것이 아니라, 유저가 className을 작성하면 거기에 맞게 CSS를 생성해줍니다.
+
+JIT compiler입니다.
+
+arbitrary values, 리스트에 없는 애매한 값 추가할 때
+
+```tsx
+<div className="h-10" />
+<div className="h-[3523.23px]" />
+```
+
+원하는 색상 추가
+
+https://tailwindcss.com/docs/adding-custom-styles
+
+```tsx
+<button className="rounded-sexy-name mt-tomato">Submit</button>
+```
+
+```
+import type { Config } from "tailwindcss";
+
+const config: Config = {
+  content: [
+    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
+  theme: {
+    extend: {
+      margin: {
+        tomato: "120px",
+      },
+      borderRadius: {
+        "sexy-name": "11.11px",
+      },
+    },
+  },
+  plugins: [],
+};
+export default config;
+
+```
