@@ -990,3 +990,102 @@ export async function POST(request: NextRequest) {
   return Response.json(data);
 }
 ```
+
+## 5.1 Server Actions
+
+formData: FormData!!!!
+
+https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations
+
+https://developer.mozilla.org/en-US/docs/Web/API/FormData#instance_methods
+
+`“use server”` 는 항상 최 상단에 있어야 합니다.
+
+`<input />` 에는 name이 필요합니다.
+
+`formData.get(”name”)`
+
+```tsx
+async function handleForm(formData: FormData) {
+  "use server";
+}
+```
+
+- app/login/page.tsx
+
+```tsx
+import FormButton from "@/components/form-btn";
+import FormInput from "@/components/form-input";
+import SocialLogin from "@/components/social-login";
+
+export default function LogIn() {
+  async function handleForm(formData: FormData) {
+    "use server";
+    console.log(formData.get("email"), formData.get("password"));
+    console.log("i run in the server baby!");
+  }
+  return (
+    <div className="flex flex-col gap-10 py-8 px-6">
+      <div className="flex flex-col gap-2 *:font-medium">
+        <h1 className="text-2xl">안녕하세요!</h1>
+        <h2 className="text-xl">Log in with email and password.</h2>
+      </div>
+      <form action={handleForm} className="flex flex-col gap-3">
+        <FormInput
+          name="email"
+          type="email"
+          placeholder="Email"
+          required
+          errors={[]}
+        />
+        <FormInput
+          name="password"
+          type="password"
+          placeholder="Password"
+          required
+          errors={[]}
+        />
+        <FormButton loading={false} text="Log in" />
+      </form>
+      <SocialLogin />
+    </div>
+  );
+}
+```
+
+- components/form-input.tsx
+
+```tsx
+interface FormInputProps {
+  type: string;
+  placeholder: string;
+  required: boolean;
+  errors: string[];
+  name: string;
+}
+
+export default function FormInput({
+  type,
+  placeholder,
+  required,
+  errors,
+  name,
+}: FormInputProps) {
+  return (
+    <div className="flex flex-col gap-2">
+      <input
+        name={name}
+        className="bg-transparent rounded-md w-full h-10 focus:outline-none ring-2 focus:ring-4 transition ring-neutral-200 focus:ring-orange-500 border-none placeholder:text-neutral-400"
+        type={type}
+        placeholder={placeholder}
+        required={required}
+      />
+      {errors.map((error, index) => (
+        <span key={index} className="text-red-500 font-medium">
+          {error}
+        </span>
+      ))}
+    </div>
+  );
+}
+```
