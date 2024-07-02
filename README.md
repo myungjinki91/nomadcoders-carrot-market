@@ -506,3 +506,11 @@ component는??
 @tailwind component는???
 
 layer, base 등 base를 수정하기 위해 layer와 apply를 한 것들을 base는 내버려두고 component에서 해라~~
+
+## 3.12 Plugins
+
+component는 plugin을 위한 것
+
+npm으로 남들이 만든 plugin을 받아서 사용할 수 있다.
+
+ex) daisyUI, tailwind CSS Form
