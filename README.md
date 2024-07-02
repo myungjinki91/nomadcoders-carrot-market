@@ -684,3 +684,104 @@ export default function CreateAccount() {
 @heroicons/react
 
 https://github.com/tailwindlabs/heroicons
+
+## 4.2 Form Components
+
+type이 필요하기 전까지 interface 쓰세요.
+
+- disabled:bg-neutral-400
+- disabled:text-neutral-300
+- disabled:cursor-not-allowed
+
+지금까지 JavaScript 사용한거 없습니다~~
+
+- app/create-account/page.tsx
+
+```tsx
+import FormButton from "@/components/form-btn";
+import FormInput from "@/components/form-input";
+import SocialLogin from "@/components/social-login";
+
+export default function CreateAccount() {
+  return (
+    <div className="flex flex-col gap-10 py-8 px-6">
+      <div className="flex flex-col gap-2 *:font-medium">
+        <h1 className="text-2xl">안녕하세요!</h1>
+        <h2 className="text-xl">Fill in the form below to join!</h2>
+      </div>
+      <form className="flex flex-col gap-3">
+        <FormInput type="text" placeholder="Username" required errors={[]} />
+        <FormInput type="email" placeholder="Email" required errors={[]} />
+        <FormInput
+          type="password"
+          placeholder="Password"
+          required
+          errors={[]}
+        />
+        <FormInput
+          type="password"
+          placeholder="Confirm Password"
+          required
+          errors={[]}
+        />
+        <FormButton loading={false} text="Create account" />
+      </form>
+      <SocialLogin />
+    </div>
+  );
+}
+```
+
+- components/form-btn.tsx
+
+```tsx
+interface FormButtonProps {
+  loading: boolean;
+  text: string;
+}
+
+export default function FormButton({ loading, text }: FormButtonProps) {
+  return (
+    <button
+      disabled={loading}
+      className="primary-btn h-10 disabled:bg-neutral-400  disabled:text-neutral-300 disabled:cursor-not-allowed"
+    >
+      {loading ? "로딩 중" : text}
+    </button>
+  );
+}
+```
+
+- components/form-login.tsx
+
+```tsx
+interface FormInputProps {
+  type: string;
+  placeholder: string;
+  required: boolean;
+  errors: string[];
+}
+
+export default function FormInput({
+  type,
+  placeholder,
+  required,
+  errors,
+}: FormInputProps) {
+  return (
+    <div className="flex flex-col gap-2">
+      <input
+        className="bg-transparent rounded-md w-full h-10 focus:outline-none ring-2 focus:ring-4 transition ring-neutral-200 focus:ring-orange-500 border-none placeholder:text-neutral-400"
+        type={type}
+        placeholder={placeholder}
+        required={required}
+      />
+      {errors.map((error, index) => (
+        <span key={index} className="text-red-500 font-medium">
+          {error}
+        </span>
+      ))}
+    </div>
+  );
+}
+```
