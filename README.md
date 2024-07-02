@@ -350,3 +350,14 @@ export default function Home() {
   );
 }
 ```
+
+## 3.8 Lists and Animations
+
+- odd:
+- even:
+- first:
+- last:
+- animation-bounce
+- animation-spin 로딩에 사용됨
+- animation-pulse 로딩에 사용됨, 스켈레톤 + double background
+- empty:
