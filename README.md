@@ -913,3 +913,80 @@ export default function SocialLogin() {
   );
 }
 ```
+
+# 5 SERVER ACTIONS
+
+## 5.0 Route Handlers
+
+로그인할 때 이전까지는 백엔드 API /api/login 을 이용해 로그인했었습니다. 지금도 가능하긴 하지만 다른 방법이 있습니다.
+
+이런 방법을 API Route라고 합니다. 폴더 이름은 상관 없고 route.ts가 중요합니다.
+
+route handler
+
+그리고 NextRequest가 중요합니다.
+
+이제 API Route를 사용하지 않아도 됩니다.
+
+- app/login/page.tsx
+
+```tsx
+"use client";
+
+import FormButton from "@/components/form-btn";
+import FormInput from "@/components/form-input";
+import SocialLogin from "@/components/social-login";
+
+export default function LogIn() {
+  const onClick = async () => {
+    const response = await fetch("/www/users", {
+      method: "POST",
+      body: JSON.stringify({
+        username: "nico",
+        password: "1234",
+      }),
+    });
+    console.log(await response.json());
+  };
+  return (
+    <div className="flex flex-col gap-10 py-8 px-6">
+      <div className="flex flex-col gap-2 *:font-medium">
+        <h1 className="text-2xl">안녕하세요!</h1>
+        <h2 className="text-xl">Log in with email and password.</h2>
+      </div>
+      <form className="flex flex-col gap-3">
+        <FormInput type="email" placeholder="Email" required errors={[]} />
+        <FormInput
+          type="password"
+          placeholder="Password"
+          required
+          errors={[]}
+        />
+      </form>
+      <span onClick={onClick}>
+        <FormButton loading={false} text="Log in" />
+      </span>
+      <SocialLogin />
+    </div>
+  );
+}
+```
+
+- www/users/route.tsx
+
+```tsx
+import { NextRequest } from "next/server";
+
+export async function GET(request: NextRequest) {
+  console.log(request);
+  return Response.json({
+    ok: true,
+  });
+}
+
+export async function POST(request: NextRequest) {
+  const data = await request.json();
+  console.log("log the user in!!!");
+  return Response.json(data);
+}
+```
