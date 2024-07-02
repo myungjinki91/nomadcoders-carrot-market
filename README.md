@@ -514,3 +514,7 @@ component는 plugin을 위한 것
 npm으로 남들이 만든 plugin을 받아서 사용할 수 있다.
 
 ex) daisyUI, tailwind CSS Form
+
+## 3.13 Conclusions
+
+앞으로 만들어가면서 많이 사용할거라 금방 익숙해질 겁니다.
