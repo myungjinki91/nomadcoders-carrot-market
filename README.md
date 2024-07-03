@@ -1089,3 +1089,81 @@ export default function FormInput({
   );
 }
 ```
+
+## 5.2 useFormStatus
+
+react-hook-form 사용 안해도 됨.
+
+useMutation hook 안해도 됨
+
+로딩 만드는데 필요한 form status
+
+```tsx
+import { useFormStatus } from "react-dom;";
+```
+
+- components/form-btn.tsx
+
+```tsx
+"use client";
+
+import { useFormStatus } from "react-dom";
+
+interface FormButtonProps {
+  text: string;
+}
+
+export default function FormButton({ text }: FormButtonProps) {
+  const { pending } = useFormStatus();
+  return (
+    <button
+      disabled={pending}
+      className="primary-btn h-10 disabled:bg-neutral-400  disabled:text-neutral-300 disabled:cursor-not-allowed"
+    >
+      {pending ? "로딩 중" : text}
+    </button>
+  );
+}
+```
+
+- app/login/page.tsx
+
+```tsx
+import FormButton from "@/components/form-btn";
+import FormInput from "@/components/form-input";
+import SocialLogin from "@/components/social-login";
+
+export default function LogIn() {
+  async function handleForm(formData: FormData) {
+    "use server";
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+    console.log("logged in!");
+  }
+  return (
+    <div className="flex flex-col gap-10 py-8 px-6">
+      <div className="flex flex-col gap-2 *:font-medium">
+        <h1 className="text-2xl">안녕하세요!</h1>
+        <h2 className="text-xl">Log in with email and password.</h2>
+      </div>
+      <form action={handleForm} className="flex flex-col gap-3">
+        <FormInput
+          name="email"
+          type="email"
+          placeholder="Email"
+          required
+          errors={[]}
+        />
+        <FormInput
+          name="password"
+          type="password"
+          placeholder="Password"
+          required
+          errors={[]}
+        />
+        <FormButton text="Log in" />
+      </form>
+      <SocialLogin />
+    </div>
+  );
+}
+```
