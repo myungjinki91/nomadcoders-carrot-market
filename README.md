@@ -1167,3 +1167,68 @@ export default function LogIn() {
   );
 }
 ```
+
+## 5.3 useFormState
+
+- server action과 useFormState()의 조합
+- useActionState()로 이름 바뀜
+
+`const [state, formAction] = useActionState(fn, initialState, permalink?);`
+
+이거 좀 어려움.
+
+- app/login/page.tsx
+
+```tsx
+"use client";
+
+import FormButton from "@/components/form-btn";
+import FormInput from "@/components/form-input";
+import SocialLogin from "@/components/social-login";
+import { useFormState } from "react-dom";
+import { handleForm } from "./actions";
+
+export default function LogIn() {
+  const [state, action] = useFormState(handleForm, null);
+  return (
+    <div className="flex flex-col gap-10 py-8 px-6">
+      <div className="flex flex-col gap-2 *:font-medium">
+        <h1 className="text-2xl">안녕하세요!</h1>
+        <h2 className="text-xl">Log in with email and password.</h2>
+      </div>
+      <form action={action} className="flex flex-col gap-3">
+        <FormInput
+          name="email"
+          type="email"
+          placeholder="Email"
+          required
+          errors={[]}
+        />
+        <FormInput
+          name="password"
+          type="password"
+          placeholder="Password"
+          required
+          errors={state?.errors ?? []}
+        />
+        <FormButton text="Log in" />
+      </form>
+      <SocialLogin />
+    </div>
+  );
+}
+```
+
+- app/login/actions.tsx
+
+```tsx
+"use server";
+
+export async function handleForm(prevState: any, formData: FormData) {
+  console.log(prevState);
+  await new Promise((resolve) => setTimeout(resolve, 5000));
+  return {
+    errors: ["wrong password", "password too short"],
+  };
+}
+```
