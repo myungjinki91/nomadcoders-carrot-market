@@ -1477,3 +1477,90 @@ const formSchema = z
     }
   });
 ```
+
+## 6.3 Transformation
+
+// At least one uppercase letter, one lowercase letter, one number and one special character
+
+```tsx
+const passwordRegex = new RegExp(
+  /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).+$/
+);
+```
+
+[.regax]
+
+정규표현식으로 데이터 검증을 할 수 있습니다.
+
+[.toLowerCase]
+
+String 타입의 데이터를 모두 소문자로 변환해줍니다.
+
+[.trim]
+
+String 타입의 데이터에서 맨앞과 뒤에 붙은 공백을 제거해줍니다.
+
+[.transform]
+
+이 메서드를 이용하면 해당 데이터를 변환할 수 있습니다.
+
+예시: `.transform((username) => `🔥 ${username} 🔥`)`
+
+```tsx
+"use server";
+import { z } from "zod";
+
+const passwordRegex = new RegExp(
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*?[#?!@$%^&*-]).+$/
+);
+
+const formSchema = z
+  .object({
+    username: z
+      .string({
+        invalid_type_error: "Username must be a string!",
+        required_error: "Where is my username???",
+      })
+      .min(3, "Way too short!!!")
+      //.max(10, "That is too looooong!")
+      .trim()
+      .toLowerCase()
+      .transform((username) => `🔥 ${username}`)
+      .refine(
+        (username) => !username.includes("potato"),
+        "No potatoes allowed!"
+      ),
+    email: z.string().email().toLowerCase(),
+    password: z
+      .string()
+      .min(4)
+      .regex(
+        passwordRegex,
+        "Passwords must contain at least one UPPERCASE, lowercase, number and special characters #?!@$%^&*-"
+      ),
+    confirm_password: z.string().min(4),
+  })
+  .superRefine(({ password, confirm_password }, ctx) => {
+    if (password !== confirm_password) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Two passwords should be equal",
+        path: ["confirm_password"],
+      });
+    }
+  });
+export async function createAccount(prevState: any, formData: FormData) {
+  const data = {
+    username: formData.get("username"),
+    email: formData.get("email"),
+    password: formData.get("password"),
+    confirm_password: formData.get("confirm_password"),
+  };
+  const result = formSchema.safeParse(data);
+  if (!result.success) {
+    return result.error.flatten();
+  } else {
+    console.log(result.data);
+  }
+}
+```
