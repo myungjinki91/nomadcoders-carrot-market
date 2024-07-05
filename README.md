@@ -1564,3 +1564,42 @@ export async function createAccount(prevState: any, formData: FormData) {
   }
 }
 ```
+
+## 6.4 Refactor
+
+1. 인터섹션 타입을 이용하여 input 태그에 있는 기본 속성들을 props로 받을 수 있게 하였습니다.
+
+2. 자바스크립트의 구조 분해 할당과 Spread 연산자를 이용하여 리팩토링을 하였습니다.
+
+=> 이제 커스텀 Input 컴포넌트를 사용할 때 원래 input 태그에 있던 기본 속성을 자유롭게 지정할 수 있습니다.
+
+```tsx
+import { InputHTMLAttributes } from "react";
+
+interface InputProps {
+  name: string;
+  errors?: string[];
+}
+
+export default function Input({
+  name,
+  errors = [],
+  ...rest
+}: InputProps & InputHTMLAttributes<HTMLInputElement>) {
+  console.log(rest);
+  return (
+    <div className="flex flex-col gap-2">
+      <input
+        name={name}
+        className="bg-transparent rounded-md w-full h-10 focus:outline-none ring-2 focus:ring-4 transition ring-neutral-200 focus:ring-orange-500 border-none placeholder:text-neutral-400"
+        {...rest}
+      />
+      {errors.map((error, index) => (
+        <span key={index} className="text-red-500 font-medium">
+          {error}
+        </span>
+      ))}
+    </div>
+  );
+}
+```

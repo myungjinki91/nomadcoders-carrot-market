@@ -13,7 +13,7 @@ const formSchema = z
         required_error: "Where is my username???",
       })
       .min(3, "Way too short!!!")
-      //.max(10, "That is too looooong!")
+      .max(10, "That is too looooong!")
       .trim()
       .toLowerCase()
       .transform((username) => `🔥 ${username}`)
@@ -36,7 +36,7 @@ const formSchema = z
       ctx.addIssue({
         code: "custom",
         message: "Two passwords should be equal",
-        path: ["confirm_password"],
+        path: ["confirmPassword"],
       });
     }
   });
