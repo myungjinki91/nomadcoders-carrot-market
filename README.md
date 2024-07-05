@@ -1412,3 +1412,68 @@ export default function CreateAccount() {
   );
 }
 ```
+
+## 6.2 Refinement
+
+Zod에는 몇 가지 문자열 관련 유효성 검사가 포함되어 있습니다. https://zod.dev/?id=strings
+
+문자열 스키마를 만들 때 몇 가지 오류 메시지를 지정할 수 있습니다.
+
+```tsx
+const name = z.string({
+  required_error: "Name은 필수입니다.",
+  invalid_type_error: "Name은 문자열이어야 합니다.",
+});
+```
+
+유효성 검사 메서드를 사용할 때 추가 인수를 전달하여 사용자 지정 오류 메시지를 제공할 수 있습니다.
+
+`z.string().min(5, { message: "5글자 이상 되어야합니다." });`
+
+.refine 메서드를 통해 사용자 지정 유효성 검사를 할 수 있습니다. https://zod.dev/?id=refine
+
+`z.string().refine((val) ⇒ val.length ≤ 255, {message: “255이하의 문자열이어야 합니다.”});`
+
+.refine 은 2개의 인수를 받습니다.
+
+1. 유효성 검사 함수
+
+2. 몇가지 옵션
+
+제공되는 옵션은 다음과 같습니다.
+
+- message: 에러 메세지 지정
+- path: 에러 경로 지정
+- params: 에러시 메세지를 커스텀하기 위해 사용되는 객체
+
+```tsx
+"use server";
+import { z } from "zod";
+
+const formSchema = z
+  .object({
+    username: z
+      .string({
+        invalid_type_error: "Username must be a string!",
+        required_error: "Where is my username???",
+      })
+      .min(3, "Way too short!!!")
+      .max(10, "That is too looooong!")
+      .refine(
+        (username) => !username.includes("potato"),
+        "No potatoes allowed!"
+      ),
+    email: z.string().email(),
+    password: z.string().min(10),
+    confirm_password: z.string().min(10),
+  })
+  .superRefine(({ password, confirm_password }, ctx) => {
+    if (password !== confirm_password) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Two passwords should be equal",
+        path: ["confirm_password"],
+      });
+    }
+  });
+```
