@@ -1705,3 +1705,88 @@ export default function LogIn() {
   );
 }
 ```
+
+## 6.7 Coerce
+
+- 값 변환: transform()
+- 타입 강제 변환: coerce()
+
+[Coerce]
+
+Zod는 coerce를 이용하여 값의 타입을 강제할 수 있습니다.
+
+모든 원시 타입이 지원되며, 아래와 같이 작동됩니다.
+
+z.coerce.string(); // String(input)
+
+z.coerce.number(); // Number(input)
+
+z.coerce.boolean(); // Boolean(input)
+
+z.coerce.bigint(); // BigInt(input)
+
+z.coerce.date(); // new Date(input)
+
+[Validator]
+
+JavaScript의 validator 모듈은 문자열 검증 및 살균(sanitization)을 위한 라이브러리입니다. 이 라이브러리는 다양한 유형의 문자열 입력을 검증하거나 살균하는 데 사용할 수 있는 여러 함수를 제공합니다. 예를 들어, 이메일 주소가 유효한 형식인지, 문자열이 특정 형식(예: URL, 날짜)에 맞는지 확인할 수 있습니다. 또한, 입력으로부터 HTML 태그를 제거하는 등의 살균 작업도 수행할 수 있습니다.
+
+```tsx
+npm i validator
+npm i @types/validator
+```
+
+validator문자열 유효성 검사 라이브러리
+
+npm i validator
+
+https://www.npmjs.com/package/validator
+
+```tsx
+"use server";
+
+import { z } from "zod";
+import validator from "validator";
+
+const phoneSchema = z.string().trim().refine(validator.isMobilePhone);
+
+const tokenSchema = z.coerce.number().min(100000).max(999999);
+
+export async function smsLogIn(prevState: any, formData: FormData) {
+  console.log(formData.get("token"));
+  console.log(tokenSchema.parse(formData.get("token")));
+}
+```
+
+```tsx
+"use client";
+
+import Button from "@/components/button";
+import Input from "@/components/input";
+import { useFormState } from "react-dom";
+import { smsLogIn } from "./actions";
+
+export default function SMSLogin() {
+  const [state, dispatch] = useFormState(smsLogIn, null);
+  return (
+    <div className="flex flex-col gap-10 py-8 px-6">
+      <div className="flex flex-col gap-2 *:font-medium">
+        <h1 className="text-2xl">SMS Log in</h1>
+        <h2 className="text-xl">Verify your phone number.</h2>
+      </div>
+      <form action={dispatch} className="flex flex-col gap-3">
+        <Input name="phone" type="number" placeholder="Phone number" required />
+        <Input
+          name="token"
+          type="number"
+          placeholder="Verification code"
+          required
+          min={100000}
+          max={999999}
+        />
+        <Button text="Verify" />
+      </form>
+    </div>
+  );
+}
+```
