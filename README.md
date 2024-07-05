@@ -1249,6 +1249,69 @@ if, if, if를 피하고 싶어요. Zod는 그걸 해결해줍니다.
 
 https://www.daleseo.com/zod-why-validation/
 
+```tsx
+"use server";
+
+import { z } from "zod";
+
+const usernameSchema = z.string().min(5).max(10);
+
+export async function createAccount(prevState: any, formData: FormData) {
+  const data = {
+    username: formData.get("username"),
+    email: formData.get("email"),
+    password: formData.get("password"),
+    confirm_password: formData.get("confirm_password"),
+  };
+  usernameSchema.parse(data.username);
+}
+```
+
+```tsx
+"use client";
+
+import FormButton from "@/components/form-btn";
+import FormInput from "@/components/form-input";
+import SocialLogin from "@/components/social-login";
+import { useFormState } from "react-dom";
+import { createAccount } from "./actions";
+
+export default function CreateAccount() {
+  const [state, dispatch] = useFormState(createAccount, null);
+  return (
+    <div className="flex flex-col gap-10 py-8 px-6">
+      <div className="flex flex-col gap-2 *:font-medium">
+        <h1 className="text-2xl">안녕하세요!</h1>
+        <h2 className="text-xl">Fill in the form below to join!</h2>
+      </div>
+      <form action={dispatch} className="flex flex-col gap-3">
+        <FormInput
+          name="username"
+          type="text"
+          placeholder="Username"
+          required
+        />
+        <FormInput name="email" type="email" placeholder="Email" required />
+        <FormInput
+          name="password"
+          type="password"
+          placeholder="Password"
+          required
+        />
+        <FormInput
+          name="confirm_password"
+          type="password"
+          placeholder="Confirm Password"
+          required
+        />
+        <FormButton text="Create account" />
+      </form>
+      <SocialLogin />
+    </div>
+  );
+}
+```
+
 ## 6.1 Validation Errors
 
 [Object Schema]
@@ -1270,3 +1333,82 @@ data의 타입이 유효한지 검사하기 위해 .parse 메소드를 사용할
 유효하지 않은 경우에는 false값의 success와 에러 정보가 담긴 error를 반환합니다.
 
 예시 : stringSchema.safeParse(12); // => { success: false; error: ZodError }
+
+```tsx
+"use server";
+import { z } from "zod";
+
+const formSchema = z.object({
+  username: z.string().min(3).max(10),
+  email: z.string().email(),
+  password: z.string().min(10),
+  confirm_password: z.string().min(10),
+});
+
+export async function createAccount(prevState: any, formData: FormData) {
+  const data = {
+    username: formData.get("username"),
+    email: formData.get("email"),
+    password: formData.get("password"),
+    confirm_password: formData.get("confirm_password"),
+  };
+  const result = formSchema.safeParse(data);
+  if (!result.success) {
+    return result.error.flatten();
+  }
+}
+```
+
+```tsx
+"use client";
+
+import FormButton from "@/components/form-btn";
+import FormInput from "@/components/form-input";
+import SocialLogin from "@/components/social-login";
+import { useFormState } from "react-dom";
+import { createAccount } from "./actions";
+
+export default function CreateAccount() {
+  const [state, dispatch] = useFormState(createAccount, null);
+  return (
+    <div className="flex flex-col gap-10 py-8 px-6">
+      <div className="flex flex-col gap-2 *:font-medium">
+        <h1 className="text-2xl">안녕하세요!</h1>
+        <h2 className="text-xl">Fill in the form below to join!</h2>
+      </div>
+      <form action={dispatch} className="flex flex-col gap-3">
+        <FormInput
+          name="username"
+          type="text"
+          placeholder="Username"
+          required
+          errors={state?.fieldErrors.username}
+        />
+        <FormInput
+          name="email"
+          type="email"
+          placeholder="Email"
+          required
+          errors={state?.fieldErrors.email}
+        />
+        <FormInput
+          name="password"
+          type="password"
+          placeholder="Password"
+          required
+          errors={state?.fieldErrors.password}
+        />
+        <FormInput
+          name="confirm_password"
+          type="password"
+          placeholder="Confirm Password"
+          required
+          errors={state?.fieldErrors.confirm_password}
+        />
+        <FormButton text="Create account" />
+      </form>
+      <SocialLogin />
+    </div>
+  );
+}
+```
