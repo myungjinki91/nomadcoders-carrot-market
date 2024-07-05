@@ -1623,3 +1623,85 @@ object자체에 refine을 해주면 객체 안에 있는 전체 데이터들을 
 6. 에러 객체에 flatten 메서드를 사용하면 사용하기 쉽게 포맷팅됩니다.
 
 7. 검증 성공시 원본 data를 사용하지 않고 result.data를 사용해야합니다.
+
+## 6.6 Log In Validation
+
+1. 상수 분리
+2. Login validation
+
+```tsx
+"use server";
+
+import {
+  PASSWORD_MIN_LENGTH,
+  PASSWORD_REGEX,
+  PASSWORD_REGEX_ERROR,
+} from "@/lib/constants";
+import { z } from "zod";
+
+const formSchema = z.object({
+  email: z.string().email().toLowerCase(),
+  password: z
+    .string({
+      required_error: "Password is required",
+    })
+    .min(PASSWORD_MIN_LENGTH)
+    .regex(PASSWORD_REGEX, PASSWORD_REGEX_ERROR),
+});
+
+export async function logIn(prevState: any, formData: FormData) {
+  const data = {
+    email: formData.get("email"),
+    password: formData.get("password"),
+  };
+  const result = formSchema.safeParse(data);
+  if (!result.success) {
+    console.log(result.error.flatten());
+    return result.error.flatten();
+  } else {
+    console.log(result.data);
+  }
+}
+```
+
+```tsx
+"use client";
+
+import FormButton from "@/components/button";
+import FormInput from "@/components/input";
+import SocialLogin from "@/components/social-login";
+import { useFormState } from "react-dom";
+import { logIn } from "./actions";
+import { PASSWORD_MIN_LENGTH } from "@/lib/constants";
+
+export default function LogIn() {
+  const [state, dispatch] = useFormState(logIn, null);
+  return (
+    <div className="flex flex-col gap-10 py-8 px-6">
+      <div className="flex flex-col gap-2 *:font-medium">
+        <h1 className="text-2xl">안녕하세요!</h1>
+        <h2 className="text-xl">Log in with email and password.</h2>
+      </div>
+      <form action={dispatch} className="flex flex-col gap-3">
+        <FormInput
+          name="email"
+          type="email"
+          placeholder="Email"
+          required
+          errors={state?.fieldErrors.email}
+        />
+        <FormInput
+          name="password"
+          type="password"
+          placeholder="Password"
+          required
+          minLength={PASSWORD_MIN_LENGTH}
+          errors={state?.fieldErrors.password}
+        />
+        <FormButton text="Log in" />
+      </form>
+      <SocialLogin />
+    </div>
+  );
+}
+```
