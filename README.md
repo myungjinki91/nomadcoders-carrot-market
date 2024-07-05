@@ -1790,3 +1790,106 @@ export default function SMSLogin() {
   );
 }
 ```
+
+## 6.8 SMS Validation
+
+Input에 key가 중요한 역할을 하나보다.
+
+https://react.dev/learn/rendering-lists
+
+```tsx
+import { z } from "zod";
+import validator from "validator";
+import { redirect } from "next/navigation";
+
+const phoneSchema = z
+  .string()
+  .trim()
+  .refine(
+    (phone) => validator.isMobilePhone(phone, "ko-KR"),
+    "Wrong phone format"
+  );
+
+const tokenSchema = z.coerce.number().min(100000).max(999999);
+
+interface ActionState {
+  token: boolean;
+}
+
+export async function smsLogIn(prevState: ActionState, formData: FormData) {
+  const phone = formData.get("phone");
+  const token = formData.get("token");
+  if (!prevState.token) {
+    const result = phoneSchema.safeParse(phone);
+    if (!result.success) {
+      return {
+        token: false,
+        error: result.error.flatten(),
+      };
+    } else {
+      return {
+        token: true,
+      };
+    }
+  } else {
+    const result = tokenSchema.safeParse(token);
+    if (!result.success) {
+      return {
+        token: true,
+        error: result.error.flatten(),
+      };
+    } else {
+      redirect("/");
+    }
+  }
+}
+```
+
+```tsx
+"use client";
+
+import Button from "@/components/button";
+import Input from "@/components/input";
+import { useFormState } from "react-dom";
+import { smsLogIn } from "./actions";
+
+const initialState = {
+  token: false,
+  error: undefined,
+};
+
+export default function SMSLogin() {
+  const [state, dispatch] = useFormState(smsLogIn, initialState);
+  return (
+    <div className="flex flex-col gap-10 py-8 px-6">
+      <div className="flex flex-col gap-2 *:font-medium">
+        <h1 className="text-2xl">SMS Log in</h1>
+        <h2 className="text-xl">Verify your phone number.</h2>
+      </div>
+      <form action={dispatch} className="flex flex-col gap-3">
+        {state.token ? (
+          <Input
+            key="token"
+            name="token"
+            type="number"
+            placeholder="Verification code"
+            required
+            min={100000}
+            max={999999}
+          />
+        ) : (
+          <Input
+            key="phone"
+            name="phone"
+            type="text"
+            placeholder="Phone number"
+            required
+            errors={state.error?.formErrors}
+          />
+        )}
+        <Button text={state.token ? "Verify Token" : "Send Verification SMS"} />
+      </form>
+    </div>
+  );
+}
+```
