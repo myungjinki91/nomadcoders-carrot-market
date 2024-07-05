@@ -36,7 +36,7 @@ const formSchema = z
       ctx.addIssue({
         code: "custom",
         message: "Two passwords should be equal",
-        path: ["confirmPassword"],
+        path: ["confirm_password"],
       });
     }
   });

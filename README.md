@@ -1603,3 +1603,23 @@ export default function Input({
   );
 }
 ```
+
+## 6.5 Recap
+
+[🔥 Super Recap 🔥]
+
+1. input에 name을 넣어주어야 formData에서 get으로 해당 데이터 값을 가져올 수 있습니다.
+
+2. safeParse는 스키마에 따라 데이터를 검사하고 변형시켜줍니다.
+
+3. .refine으로 커스텀 validation을 만들 수 있습니다.
+
+object자체에 refine을 해주면 객체 안에 있는 전체 데이터들을 대상으로 검증할 수 있습니다.
+
+4. .transform으로 데이터를 변형시킬 수 있습니다.
+
+5. safeParse는 parse와 다르게 검증에 실패해도 에러를 만들지 않습니다.
+
+6. 에러 객체에 flatten 메서드를 사용하면 사용하기 쉽게 포맷팅됩니다.
+
+7. 검증 성공시 원본 data를 사용하지 않고 result.data를 사용해야합니다.
