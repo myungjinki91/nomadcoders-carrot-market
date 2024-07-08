@@ -1957,3 +1957,71 @@ model User {
 npx prisma migrate dev
 add_user
 ```
+
+## 7.2 Prisma Client
+
+Prisma Client는 데이터에 맞춰 자동 생성되는 type-safe 쿼리 빌더입니다.
+
+```bash
+// Installation
+npm install @prisma/client
+```
+
+Prisma는 schema.prisma를 보고 d.ts파일을 만들어줍니다.
+
+- lib/db.ts
+
+```tsx
+import { PrismaClient } from "@prisma/client";
+
+const db = new PrismaClient();
+
+export async function test() {
+  const users = await db.user.findMany({
+    where: {
+      username: {
+        contains: "est",
+      },
+    },
+  });
+  console.log(users);
+  //   const user = await db.user.create({
+  //     data: {
+  //       username: "test",
+  //     },
+  //   });
+  //   console.log(user);
+}
+
+export default db;
+```
+
+// Importing Prisma Client
+
+`import { PrismaClient } from '@prisma/client'`
+
+`const prisma = new PrismaClient()`
+
+https://www.prisma.io/docs/orm/prisma-client/setup-and-configuration/introduction
+
+npx prisma migrate dev 커맨드를 실행하면 아래의 과정이 한번에 수행됩니다.
+
+1. 데이터베이스 변경 사항을 확인하고, 수정되었거나 삭제된 부분을 찾습니다.
+
+2. 새로운 변경 사항이 있다면, 그것을 시험해 볼 수 있는 별도의 데이터베이스에 먼저 적용합니다. (테스트 목적)
+
+3. 데이터 모델에 변화가 있으면, 그에 맞는 새로운 마이그레이션을 만듭니다.
+
+4. 모든 새로운 마이그레이션을 실제 데이터베이스에 적용하고, 이를 기록합니다.
+
+5. 필요한 코드를 자동으로 생성합니다. (Prisma Client 등..)
+
+더 자세한 내용은 아래 링크를 통해 공부하실 수 있습니다.
+
+[migrate workflows 공식 문서]
+
+https://www.prisma.io/docs/orm/prisma-migrate/workflows/development-and-production
+
+[migrate workflows에 대해 한글로 정리된 블로그]
+
+https://pyh.netlify.app/prisma/prisma_migrate/
