@@ -2041,3 +2041,58 @@ npx prisma studio
 https://www.prisma.io/studio
 
 Schema변경시 → prisma studio 종료 → migrate → 다시 실행
+
+## 7.4 Relationships
+
+User와 SMSToken을 연결하면서 Relation을 배울겁니다.
+
+```
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int        @id @default(autoincrement())
+  username   String     @unique
+  email      String?    @unique
+  password   String?
+  phone      String?    @unique
+  github_id  String?    @unique
+  avatar     String?
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+  SMSToken   SMSToken[]
+}
+
+model SMSToken {
+  id         Int      @id @default(autoincrement())
+  token      String   @unique
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
+}
+
+```
+
+```tsx
+import { PrismaClient } from "@prisma/client";
+
+const db = new PrismaClient();
+
+export async function test() {
+  const token = await db.sMSToken.findUnique({
+    where: {
+      id: 1,
+    },
+  });
+  console.log(token);
+}
+
+export default db;
+```
