@@ -1921,3 +1921,39 @@ prisma 초기화
 ```bash
 npx prisma init
 ```
+
+## 7.1 Schemas
+
+초기화 하면 아래 파일이 생성되는데 ORM을 추가해줍시다.
+
+- prisma/schema.prisma
+
+```
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  username String @unique
+  email String? @unique
+  password String?
+  phone String? @unique
+  github_id String? @unique
+  avatar String?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+```
+
+그리고 아래 명령을 입력하면 DB가 만들어집니다.
+
+```bash
+npx prisma migrate dev
+add_user
+```
