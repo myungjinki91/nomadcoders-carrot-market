@@ -2025,3 +2025,19 @@ https://www.prisma.io/docs/orm/prisma-migrate/workflows/development-and-producti
 [migrate workflows에 대해 한글로 정리된 블로그]
 
 https://pyh.netlify.app/prisma/prisma_migrate/
+
+## 7.3 Prisma Studio
+
+Django admin같은 것
+
+Prisma Studio
+
+Prisma 프로젝트에서 데이터를 탐색하고 조작하는 가장 쉬운 방법입니다.
+
+```bash
+npx prisma studio
+```
+
+https://www.prisma.io/studio
+
+Schema변경시 → prisma studio 종료 → migrate → 다시 실행
