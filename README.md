@@ -2096,3 +2096,20 @@ export async function test() {
 
 export default db;
 ```
+
+## 7.5 onDelete
+
+User와 token이 관계맺고 있기 때문에 user를 지울 수 없습니다.
+
+```
+model SMSToken {
+  id         Int      @id @default(autoincrement())
+  token      String   @unique
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     Int
+}
+```
+
+onDelete를 정하는 것은 매우 중요합니다. 연관된 객체를 지우는게 꼭 필요한 일인지도 생각해봐야합니다.
