@@ -1893,3 +1893,31 @@ export default function SMSLogin() {
   );
 }
 ```
+
+# 7 PRISMA
+
+## 7.0 Setup
+
+Prisms는 DB
+
+Prisma에게 Prisma Scheme Language로 내 데이터 구조를 설명해야 합니다.
+
+그러면 Prisma는 SQL을 생성합니다.
+
+Prisma Client, TypeScript, ORM
+
+마이그레이션도 됌
+
+Database Browser도 됨
+
+Prisma는 통역사
+
+차세대 Node.js 및 TypeScript ORM
+
+https://www.prisma.io/orm
+
+prisma 초기화
+
+```bash
+npx prisma init
+```
