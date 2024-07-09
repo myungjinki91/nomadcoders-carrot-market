@@ -2284,3 +2284,51 @@ export async function createAccount(prevState: any, formData: FormData) {
   }
 }
 ```
+
+## 8.3 Iron Session
+
+Is user logged in or not?
+
+쿠키는 모든 요청에 들어가서 누가 요청했는지 알 수 있어요
+
+password: process.env.COOKIE_PASSWORD!
+
+타입스크립트에게 이 값이 무조건 있다고 알려줄 수 있음
+
+### app/create-account/action.ts
+
+```
+    const cookie = await getIronSession<typeof user>(cookies(), {
+      cookieName: "delicious-karrot",
+      password: process.env.COOKIE_PASSWORD!,
+    });
+    cookie.id = user.id;
+    await cookie.save();
+    redirect("/profile");
+```
+
+### tips
+
+비밀번호 털렸다고? 암호화. 해시함수. 5분 설명.
+
+https://www.youtube.com/watch?v=67UwxR3ts2E
+
+세션 vs 토큰 vs 쿠키? 기초개념 잡아드림. 10분 순삭!
+
+https://www.youtube.com/watch?v=tosLBcAX1vk
+
+1password password generator
+
+https://1password.com/password-generator/
+
+For generating random 32 character-long password, you may just use terminal command as Next.js documentation introduced:
+
+`openssl rand -base64 32`
+
+https://nextjs.org/docs/app/building-your-application/authentication#1-generating-a-secret-key
+
+### iron-session
+
+```tsx
+npm i iron-session
+```
