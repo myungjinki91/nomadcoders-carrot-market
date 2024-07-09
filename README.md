@@ -2226,3 +2226,61 @@ export async function createAccount(prevState: any, formData: FormData) {
   }
 }
 ```
+
+## 8.2 Password Hashing
+
+bcrypt
+
+```tsx
+npm i bcrypt
+npm i -D @types/bcrypt
+```
+
+How To Safely Store A Password?
+
+https://codahale.com/how-to-safely-store-a-password/
+
+hashing, salting, rainbow
+
+https://youtu.be/67UwxR3ts2E?si=2pqx4IUADxyAzoUj
+
+hash function is one way
+
+how many times do you want to hash? 12 times
+
+```tsx
+const hashedPassword = await bcrypt.hash(result.data.password, 12);
+```
+
+why do we select only id?
+
+- app/create-account/action.ts
+
+```tsx
+export async function createAccount(prevState: any, formData: FormData) {
+  const data = {
+    username: formData.get("username"),
+    email: formData.get("email"),
+    password: formData.get("password"),
+    confirm_password: formData.get("confirm_password"),
+  };
+  const result = await formSchema.safeParseAsync(data);
+  if (!result.success) {
+    return result.error.flatten();
+  } else {
+    const hashedPassword = await bcrypt.hash(result.data.password, 12);
+    const user = await db.user.create({
+      data: {
+        username: result.data.username,
+        email: result.data.email,
+        password: hashedPassword,
+      },
+      select: {
+        id: true,
+      },
+    });
+    // log the user in
+    // redirect "/home"
+  }
+}
+```
