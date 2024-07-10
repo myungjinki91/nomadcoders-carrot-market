@@ -2594,3 +2594,32 @@ password는 hasing, cookie는 encrypt 그래야 decrypt가능
 form에서 button, onclick을 사용하면 use client를 사용한다는 뜻입니다.
 
 use server에서 하고싶다면 form action을 사용합시다.
+
+## 8.9 Middleware
+
+미들웨어란 코드와 코드 사이에서 실행되는 코드입니다.
+
+/middleware.ts
+
+/app
+
+app과 같은 레벨에 위치해야 합니다.
+
+미들웨어는 홈페이지 경로를 요청만 해도 7번 실행됩니다. favicon받을 때도 실행됩니다.
+
+https://nextjs.org/docs/app/api-reference/file-conventions/middleware
+
+- /middleware.ts
+
+```tsx
+import { NextRequest, NextResponse } from "next/server";
+import getSession from "./lib/session";
+
+export async function middleware(request: NextRequest) {
+  const session = await getSession();
+  console.log(session);
+  if (request.nextUrl.pathname === "/profile") {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+}
+```
