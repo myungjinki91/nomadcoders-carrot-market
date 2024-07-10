@@ -2623,3 +2623,28 @@ export async function middleware(request: NextRequest) {
   }
 }
 ```
+
+## 8.10 Matcher
+
+이전처럼 request를 이용해서 동작을 처리할 수도 있지만, config 를 사용할 수도 있습니다.
+
+```tsx
+export const config = {
+  matcher: ['profile', '/about/:path*', '/dashboard/:path*'],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)"]
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|logo.svg).*)"],
+}
+```
+
+```
+import { NextRequest } from "next/server";
+
+export async function middleware(request: NextRequest) {
+  console.log(request);
+}
+
+export const Config = {
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+};
+
+```
