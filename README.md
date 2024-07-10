@@ -2636,7 +2636,7 @@ export const config = {
 }
 ```
 
-```
+```tsx
 import { NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
@@ -2646,5 +2646,66 @@ export async function middleware(request: NextRequest) {
 export const Config = {
   matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };
-
 ```
+
+## 8.12 Authentication Middleware
+
+미들웨어에서 유저가 URL을 직접 입력할 때 어떻게 동작할지 결정할 수 있습니다.
+
+```tsx
+import { NextRequest, NextResponse } from "next/server";
+import getSession from "./lib/session";
+
+interface Routes {
+  [key: string]: boolean;
+}
+
+const publicOnlyUrls: Routes = {
+  "/": true,
+  "/login": true,
+  "/sms": true,
+  "/create-account": true,
+};
+
+export async function middleware(request: NextRequest) {
+  const session = await getSession();
+  const exists = publicOnlyUrls[request.nextUrl.pathname];
+  if (!session.id) {
+    if (!exists) {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+  } else {
+    if (exists) {
+      return NextResponse.redirect(new URL("/products", request.url));
+    }
+  }
+}
+```
+
+리팩토링 코드입니다.
+
+```tsx
+const publicUrls = new Set(["/", "/login", "/sms", "/create-account"]);
+
+export async function middleware(request: NextRequest) {
+  const isPublicPath = publicUrls.has(request.nextUrl.pathname);
+  const isLoggedIn = Boolean((await getSession()).id);
+
+  if (!isLoggedIn && !isPublicPath) {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
+  if (isLoggedIn && isPublicPath) {
+    return NextResponse.redirect(new URL("/home", request.url));
+  }
+```
+
+CSS가 적용되지 않을 경우, config, Config 오타 있는지 확인하고, 안되면 아래 코드를 추가합니다.
+
+```tsx
+if (request.nextUrl.pathname.startsWith("/_next")) {
+  return NextResponse.next();
+}
+```
+
+https://www.reddit.com/r/nextjs/comments/15gzjwm/nextjs_middleware_redirect_not_serving_css/
