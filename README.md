@@ -2529,3 +2529,56 @@ const formSchema = z
     path: ["confirm_password"],
   });
 ```
+
+## 8.7 Log Out
+
+로그아웃은 간단합니다. 세션을 획득하고, 세션을 없에버리면 됩니다.
+
+로그아웃 버튼 만들 땐 form action을 사용하면 편리합니다
+
+```tsx
+<form action={}>
+```
+
+https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations#forms
+
+session이 없는데 메인 페이지로 접속하려고 하면 notFound()를 사용하면 유용합니다.
+
+```tsx
+import db from "@/lib/db";
+import getSession from "@/lib/session";
+import { notFound, redirect } from "next/navigation";
+
+async function getUser() {
+  const session = await getSession();
+  if (session.id) {
+    const user = await db.user.findUnique({
+      where: {
+        id: session.id,
+      },
+    });
+    if (user) {
+      return user;
+    }
+  }
+  notFound();
+}
+
+export default async function Profile() {
+  const user = await getUser();
+  const logOut = async () => {
+    "use server";
+    const session = await getSession();
+    await session.destroy();
+    redirect("/");
+  };
+  return (
+    <div>
+      <h1>Welcome! {user?.username}!</h1>
+      <form action={logOut}>
+        <button>Log out</button>
+      </form>
+    </div>
+  );
+}
+```
