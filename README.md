@@ -2582,3 +2582,15 @@ export default async function Profile() {
   );
 }
 ```
+
+## 8.8 Recap
+
+세션에는 보통 id만 담지만, 역할도 담기도 합니다.
+
+hashing과 encrypt는 다릅니다.
+
+password는 hasing, cookie는 encrypt 그래야 decrypt가능
+
+form에서 button, onclick을 사용하면 use client를 사용한다는 뜻입니다.
+
+use server에서 하고싶다면 form action을 사용합시다.
