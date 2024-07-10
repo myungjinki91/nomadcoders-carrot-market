@@ -2725,3 +2725,33 @@ export const config = {
 ## 9.0 Introduction
 
 옵션이라 넘어가도 좋습니다.
+
+## 9.1 Github Authentication
+
+OAuth흐름 이해!
+
+route.ts는 요청만 할 수 있습니다.
+
+URLSearchParams는 Node.js에서 제공
+
+- app/github/start/route.ts
+
+```tsx
+export function GET() {
+  const baseURL = "https://github.com/login/oauth/authorize";
+  const params = {
+    client_id: process.env.GITHUB_CLIENT_ID!,
+    scope: "read:user,user:email",
+    allow_signup: "true",
+  };
+  const formattedParams = new URLSearchParams(params).toString();
+  const finalUrl = `${baseURL}?${formattedParams}`;
+  return Response.redirect(finalUrl);
+}
+```
+
+GitHub Authorizing OAuth apps
+
+다른 사용자가 OAuth app에 권한을 부여하도록 설정할 수 있습니다.
+
+https://docs.github.com/ko/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps
