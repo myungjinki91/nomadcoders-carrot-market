@@ -2446,3 +2446,86 @@ export async function logIn(prevState: any, formData: FormData) {
   }
 }
 ```
+
+## 8.6 superRefine
+
+지금은 회원가입하면 모든 검사를 다 하기 때문에 DB가 두 번 호출됩니다. 이걸 해결해봅시다.
+
+위에서 막히면 아래는 검사 안하고 종료하게 만들고 싶어요
+
+superRefine(callback)는 refine의 상세한 버전
+
+callback(scheme, refinementCtx)
+
+refinementCtx는 에러 묶음
+
+https://zod.dev/ERROR_HANDLING?id=zodissue
+
+| field   | type           | details                                                                                         |
+| ------- | -------------- | ----------------------------------------------------------------------------------------------- | ------------------------------ |
+| code    | z.ZodIssueCode | You can access this enum with z.ZodIssueCode. A full breakdown of the possible values is below. |
+| path    | (string        | number)[]                                                                                       | e.g, ['addresses', 0, 'line1'] |
+| message | string         | e.g. Invalid type. Expected string, received number.                                            |
+
+abort early, https://zod.dev/?id=abort-early
+
+```tsx
+const formSchema = z
+  .object({
+    username: z
+      .string({
+        invalid_type_error: "Username must be a string!",
+        required_error: "Where is my username???",
+      })
+      .toLowerCase()
+      .trim()
+      // .transform((username) => `🔥 ${username} 🔥`)
+      .refine(checkUsername, "No potatoes allowed!"),
+    email: z.string().email().toLowerCase(),
+    password: z.string().min(PASSWORD_MIN_LENGTH),
+    //.regex(PASSWORD_REGEX, PASSWORD_REGEX_ERROR),
+    confirm_password: z.string().min(PASSWORD_MIN_LENGTH),
+  })
+  .superRefine(async ({ username }, ctx) => {
+    const user = await db.user.findUnique({
+      where: {
+        username,
+      },
+      select: {
+        id: true,
+      },
+    });
+    if (user) {
+      ctx.addIssue({
+        code: "custom",
+        message: "This username is already taken",
+        path: ["username"],
+        fatal: true,
+      });
+      return z.NEVER;
+    }
+  })
+  .superRefine(async ({ email }, ctx) => {
+    const user = await db.user.findUnique({
+      where: {
+        email,
+      },
+      select: {
+        id: true,
+      },
+    });
+    if (user) {
+      ctx.addIssue({
+        code: "custom",
+        message: "This email is already taken",
+        path: ["email"],
+        fatal: true,
+      });
+      return z.NEVER;
+    }
+  })
+  .refine(checkPasswords, {
+    message: "Both passwords should be the same!",
+    path: ["confirm_password"],
+  });
+```
