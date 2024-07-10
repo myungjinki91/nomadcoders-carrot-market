@@ -2709,3 +2709,13 @@ if (request.nextUrl.pathname.startsWith("/_next")) {
 ```
 
 https://www.reddit.com/r/nextjs/comments/15gzjwm/nextjs_middleware_redirect_not_serving_css/
+
+## 8.13 Recap
+
+미들웨어에서 패키지는 실행하지 않습니다. 너무 무겁기 때문이죠!
+
+```tsx
+export const config = {
+  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+};
+```
