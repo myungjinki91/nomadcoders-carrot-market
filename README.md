@@ -2719,3 +2719,9 @@ export const config = {
   matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
 };
 ```
+
+# 9 SOCIAL AUTHENTICATION
+
+## 9.0 Introduction
+
+옵션이라 넘어가도 좋습니다.
