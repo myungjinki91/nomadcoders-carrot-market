@@ -2875,3 +2875,105 @@ https://docs.github.com/ko/apps/oauth-apps/building-oauth-apps/authorizing-oauth
 3. Email 정보도 계정 생성에 활용하기
 
 4. Request 파트와 Response 파트를 분리하기
+
+## 9.5 SMS Token
+
+https://www.twilio.com/en-us
+
+핸드폰으로 로그인 할 때 가입되어 있지 않으면 가입시켜주기!
+
+connectOrCreate()
+
+```tsx
+"use server";
+
+import crypto from "crypto";
+import { z } from "zod";
+import validator from "validator";
+import { redirect } from "next/navigation";
+import db from "@/lib/db";
+
+const phoneSchema = z
+  .string()
+  .trim()
+  .refine(
+    (phone) => validator.isMobilePhone(phone, "ko-KR"),
+    "Wrong phone format"
+  );
+
+const tokenSchema = z.coerce.number().min(100000).max(999999);
+
+interface ActionState {
+  token: boolean;
+}
+
+async function getToken() {
+  const token = crypto.randomInt(100000, 999999).toString();
+  const exists = await db.sMSToken.findUnique({
+    where: {
+      token,
+    },
+    select: {
+      id: true,
+    },
+  });
+  if (exists) {
+    return getToken();
+  } else {
+    return token;
+  }
+}
+
+export async function smsLogIn(prevState: ActionState, formData: FormData) {
+  const phone = formData.get("phone");
+  const token = formData.get("token");
+  if (!prevState.token) {
+    const result = phoneSchema.safeParse(phone);
+    if (!result.success) {
+      return {
+        token: false,
+        error: result.error.flatten(),
+      };
+    } else {
+      await db.sMSToken.deleteMany({
+        where: {
+          user: {
+            phone: result.data,
+          },
+        },
+      });
+      const token = await getToken();
+      await db.sMSToken.create({
+        data: {
+          token,
+          user: {
+            connectOrCreate: {
+              where: {
+                phone: result.data,
+              },
+              create: {
+                username: crypto.randomBytes(10).toString("hex"),
+                phone: result.data,
+              },
+            },
+          },
+        },
+      });
+      // send the token using twilio
+      return {
+        token: true,
+      };
+    }
+  } else {
+    const result = tokenSchema.safeParse(token);
+    if (!result.success) {
+      return {
+        token: true,
+        error: result.error.flatten(),
+      };
+    } else {
+      redirect("/");
+    }
+  }
+}
+```
