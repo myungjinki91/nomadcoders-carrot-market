@@ -2865,3 +2865,13 @@ curl -H "Authorization: Bearer OAUTH-TOKEN" https://api.github.com/user
 ```
 
 https://docs.github.com/ko/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps#3-use-the-access-token-to-access-the-api
+
+## 9.4 Code Challenge
+
+1. 로그인 시켜주는 함수 만들고 사용하기
+
+2. Username이 중복되는 경우 에러 핸들링하기
+
+3. Email 정보도 계정 생성에 활용하기
+
+4. Request 파트와 Response 파트를 분리하기
