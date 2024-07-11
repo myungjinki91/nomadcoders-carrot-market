@@ -2796,3 +2796,72 @@ export async function GET(request: NextRequest) {
   return Response.json({ accessTokenData });
 }
 ```
+
+## 9.3 Github API
+
+no-cache!!!!!!!!!!!!!!!
+
+username이 중복일 경우 해결해야 합니다
+
+액세스 토큰을 사용하여 API에 액세스
+
+액세스 토큰을 사용하면 사용자를 대신하여 API에 요청할 수 있습니다.
+
+- app/github/complete/route.ts
+
+```tsx
+import db from "@/lib/db";
+import getSession from "@/lib/session";
+import { notFound, redirect } from "next/navigation";
+import { NextRequest } from "next/server";
+
+export async function GET(request: NextRequest) {
+  ...
+  const userProfileResponse = await fetch("https://api.github.com/user", {
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+    cache: "no-cache",
+  });
+  const { id, avatar_url, login } = await userProfileResponse.json();
+  const user = await db.user.findUnique({
+    where: {
+      github_id: id + "",
+    },
+    select: {
+      id: true,
+    },
+  });
+  if (user) {
+    const session = await getSession();
+    session.id = user.id;
+    await session.save();
+    return redirect("/profile");
+  }
+  const newUser = await db.user.create({
+    data: {
+      username: login,
+      github_id: id + "",
+      avatar: avatar_url,
+    },
+    select: {
+      id: true,
+    },
+  });
+  const session = await getSession();
+  session.id = newUser.id;
+  await session.save();
+  return redirect("/profile");
+}
+
+```
+
+```tsx
+Authorization: Bearer OAUTH-TOKEN
+
+GET https://api.github.com/user
+
+curl -H "Authorization: Bearer OAUTH-TOKEN" https://api.github.com/user
+```
+
+https://docs.github.com/ko/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps#3-use-the-access-token-to-access-the-api
