@@ -2755,3 +2755,44 @@ GitHub Authorizing OAuth apps
 다른 사용자가 OAuth app에 권한을 부여하도록 설정할 수 있습니다.
 
 https://docs.github.com/ko/apps/oauth-apps/building-oauth-apps/authorizing-oauth-apps
+
+## 9.2 Access Token
+
+Access token 획득과정
+
+위에서 받은 code로 다시 github에 요청
+
+성공하면 access token획득
+
+- app/github/complete/route.ts
+
+```tsx
+import { notFound } from "next/navigation";
+import { NextRequest } from "next/server";
+
+export async function GET(request: NextRequest) {
+  const code = request.nextUrl.searchParams.get("code");
+  if (!code) {
+    return notFound();
+  }
+  const accessTokenParams = new URLSearchParams({
+    client_id: process.env.GITHUB_CLIENT_ID!,
+    client_secret: process.env.GITHUB_CLIENT_SECRET!,
+    code,
+  }).toString();
+  const accessTokenURL = `https://github.com/login/oauth/access_token?${accessTokenParams}`;
+  const accessTokenResponse = await fetch(accessTokenURL, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+    },
+  });
+  const accessTokenData = await accessTokenResponse.json();
+  if ("error" in accessTokenData) {
+    return new Response(null, {
+      status: 400,
+    });
+  }
+  return Response.json({ accessTokenData });
+}
+```
