@@ -2977,3 +2977,23 @@ export async function smsLogIn(prevState: ActionState, formData: FormData) {
   }
 }
 ```
+
+# 10 PRODUCTS
+
+## 10.0 Introduction
+
+```
+model Product {
+  id Int @id @default(autoincrement())
+
+  title       String
+  price       Float
+  photo       String
+  description String
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id])
+  userId      Int
+}
+
+```
