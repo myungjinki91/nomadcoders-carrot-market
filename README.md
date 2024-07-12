@@ -3118,3 +3118,19 @@ export default async function Products() {
   );
 }
 ```
+
+## 10.3 Product Component
+
+/goguma.jpg
+
+<img /> vs <Image />
+
+Layout shift
+
+lazy loading
+
+srcset=””
+
+<Image fill />은 absolute가 된다.
+
+<Image quality />
