@@ -3430,3 +3430,13 @@ export default function ProductList({ initialProducts }: ProductListProps) {
   );
 }
 ```
+
+## 10.9 Infinite Scrolling
+
+trigger를 바꿉시다. useRef사용
+
+const trigger = useRef(1)는 rendering해도 내부 값이 바뀌지 않습니다. trigger안에 데이터를 저장하고 싶을 때 사용합니다.
+
+HTMLSpanElement
+
+IntersectionObserver
