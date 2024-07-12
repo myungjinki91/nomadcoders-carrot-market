@@ -3134,3 +3134,81 @@ srcset=””
 <Image fill />은 absolute가 된다.
 
 <Image quality />
+
+## 10.4 Detail Skeleton
+
+`number.toLocaleString(”ko-KR”);`
+
+Unix epoch
+
+```jsx
+const formatter = new Intl.RelativeTimeFormat("ko");
+
+return formatter.format(diff, "days");
+```
+
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl
+
+Product detail 페이지에서는 Tab bar가 없는게 더 보기 좋아요.
+
+- lib/utils.ts
+
+```tsx
+export function formatToTimeAgo(date: string): string {
+  const dayInMs = 1000 * 60 * 60 * 24;
+  const time = new Date(date).getTime();
+  const now = new Date().getTime();
+  const diff = Math.round((time - now) / dayInMs);
+
+  const formatter = new Intl.RelativeTimeFormat("ko");
+
+  return formatter.format(diff, "days");
+}
+
+export function formatToWon(price: number): string {
+  return price.toLocaleString("ko-KR");
+}
+```
+
+next.js에서 parameter를 제공
+
+- app/products/[id]/page.tsx
+
+```tsx
+async function getProduct() {
+  await new Promise((resolve) => setTimeout(resolve, 60000));
+}
+
+export default async function ProductDetail({
+  params: { id },
+}: {
+  params: { id: string };
+}) {
+  const product = await getProduct();
+  return <span>Product detail of the product {id}</span>;
+}
+```
+
+- app/products/[id]/loading.tsx
+
+```tsx
+import { PhotoIcon } from "@heroicons/react/24/solid";
+
+export default function Loading() {
+  return (
+    <div className="animate-pulse p-5 flex flex-col gap-5">
+      <div className="aspect-square border-neutral-700 text-neutral-700 border-4 border-dashed rounded-md flex justify-center items-center">
+        <PhotoIcon className="h-28" />
+      </div>
+      <div className="flex gap-2 items-center">
+        <div className="size-14 rounded-full bg-neutral-700" />
+        <div className="flex flex-col gap-1">
+          <div className="h-5 w-40 bg-neutral-700 rounded-md" />
+          <div className="h-5 w-20 bg-neutral-700 rounded-md" />
+        </div>
+      </div>
+      <div className="h-10 w-80 bg-neutral-700 rounded-md" />
+    </div>
+  );
+}
+```
