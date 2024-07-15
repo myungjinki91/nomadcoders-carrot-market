@@ -3716,3 +3716,40 @@ export async function uploadProduct(_: any, formData: FormData) {
 Cloudflare Image Optimization
 
 https://developers.cloudflare.com/images
+
+## 11.4 Upload URLs
+
+이번에 할 것
+
+- 유저가 사진을 선택하면 Upload URL을 받아오기
+
+인상적인 내용
+
+- 유저가 Form action전에 Input으로 이미지를 선택하면 Upload URL을 받아오자.
+
+코드
+
+- app/products/add/actions.ts
+
+```tsx
+export async function getUploadUrl() {
+  const response = await fetch(
+    `https://api.cloudflare.com/client/v4/accounts/${process.env.CLOUDFLARE_ACCOUNT_ID}/images/v2/direct_upload`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.CLOUDFLARE_APIKEY}`,
+      },
+    }
+  );
+  const data = await response.json();
+  console.log(data);
+  return data;
+}
+```
+
+팁
+
+https://developers.cloudflare.com/images/upload-images/direct-creator-upload/#request-a-one-time-upload-url
+
+https://api.cloudflare.com/client/v4/accounts/ACCOUNT_ID/images/v2/direct_upload
