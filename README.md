@@ -3694,3 +3694,25 @@ export async function uploadProduct(_: any, formData: FormData) {
   }
 }
 ```
+
+## 11.3 Images Setup
+
+이번에 할 것
+
+- Cloudflare Images
+
+인상적인 내용
+
+- 서버가 여러개가 되면 파일시스템 저장은 좋지 않다.
+- Vercel, Cloudflare page같은 serverless로 배포한다고 한다면, 코드를 배포할 때마다 새로운 서버가 생성되고 이전 파일들은 사라짐
+- 코드가 포함된 서버는 확장과 복제가 가능해야 하며 시작과 종료도 가능해야 함.
+- Vercel을 사용하면 파일이 업로드 다운로드 모두 비용이 청구됨!
+- User → Server → CF
+- User → Server → CF(Upload URL) → User → CF → Upload URL
+- Cloudflare image 이미지 변형 가능
+
+팁
+
+Cloudflare Image Optimization
+
+https://developers.cloudflare.com/images
