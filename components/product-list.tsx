@@ -27,8 +27,8 @@ export default function ProductList({ initialProducts }: ProductListProps) {
           setIsLoading(true);
           const newProducts = await getMoreProducts(page + 1);
           if (newProducts.length !== 0) {
-            setPage((prev) => prev + 1);
             setProducts((prev) => [...prev, ...newProducts]);
+            setPage((prev) => prev + 1);
           } else {
             setIsLastPage(true);
           }

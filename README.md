@@ -3440,3 +3440,70 @@ const trigger = useRef(1)는 rendering해도 내부 값이 바뀌지 않습니�
 HTMLSpanElement
 
 IntersectionObserver
+
+# 11 PRODUCT UPLOAD
+
+## 11.0 Introduction
+
+앞으로 11, 12, 13에서 배울 내용
+
+- React Hook Form
+- Server Action
+- Intercepting Route
+- Cache
+
+이번에 할 것
+
+- 상품 업로드 버튼 만들기
+- 상품 업로드 페이지 만들기
+
+인상적인 내용
+
+- label htmlFor를 이용한 이미지를 클릭 시 업로드 기능
+- Tailwind CSS, aspect-square
+- Tailwind CSS, flex flex-col gap-5
+- Tailwind CSS, text-neutral
+
+```tsx
+"use client";
+
+import Button from "@/components/button";
+import Input from "@/components/input";
+import { PhotoIcon } from "@heroicons/react/24/solid";
+import { useState } from "react";
+
+export default function AddProduct() {
+  const [preview, setPreview] = useState("");
+  const onImageChange = () => {};
+  return (
+    <div>
+      <form className="p-5 flex flex-col gap-5">
+        <label
+          htmlFor="photo"
+          className="border-2 aspect-square flex items-center justify-center flex-col text-neutral-300 border-neutral-300 rounded-md border-dashed cursor-pointer"
+        >
+          <PhotoIcon className="w-20" />
+          <div className="text-neutral-400 text-sm">사진을 추가해주세요.</div>
+        </label>
+        <input
+          onChange={onImageChange}
+          type="file"
+          id="photo"
+          name="photo"
+          accept="image/*"
+          className="hidden"
+        />
+        <Input name="title" required placeholder="제목" type="text" />
+        <Input name="price" type="number" required placeholder="가격" />
+        <Input
+          name="description"
+          type="text"
+          required
+          placeholder="자세한 설명"
+        />
+        <Button text="작성 완료" />
+      </form>
+    </div>
+  );
+}
+```
