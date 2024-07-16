@@ -4079,3 +4079,17 @@ https://nextjs.org/docs/app/building-your-application/routing/intercepting-route
 Parallel Routes
 
 https://nextjs.org/docs/app/building-your-application/routing/parallel-routes
+
+## 12.4 Default Routes
+
+이번에 할 것
+
+- default.tsx
+
+인상적인 내용
+
+- app/page.js는 app/@children/page.js와 같다.
+
+팁
+
+https://nextjs.org/docs/app/building-your-application/routing/parallel-routes#defaultjs
