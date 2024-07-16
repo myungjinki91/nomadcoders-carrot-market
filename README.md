@@ -4412,3 +4412,37 @@ const getCachedProduct = nextCache(getProduct, ["product-detail"], {
   - 보는 사람에 따라 내용이 바뀌지 않음
   - 초기 DB, API접근은 한번만 합니다. 바뀌면 그제서야 합니다.
 - /profile 페이지는 dynamic이네요?
+
+## 13.7 Route Segment Config
+
+이번에 할 것
+
+- customization
+
+인상적인 내용
+
+- route segment config
+  - const dynamic = “auto”, 최대한 많이 캐싱함
+  - const dynamic = “force-dynamic”, dynamic렌더링을 강제로 실행
+- 아주 멋진기능인 revalidate
+  - production에서 해야함!!!
+  - 아주 많이 사용!!!
+
+코드
+
+- app/(tabs)/home/page.tsx
+
+```tsx
+// export const dynamic = "force-dynamic"
+export const revalidate = 60;
+```
+
+팁
+
+음.. 그러면 dev mode에서 nextCache로 만든거를 실제로 production으로 build할때에는 cache를 다시 돌려놔야 하는건가요? 아니면 cache를 써도 되고 저렇게 써도 되고 둘다 가능한 건가요?
+
+개발 모드에서는 static 페이지를 만드는 작업이 없었기 때문에 home이 다이나믹 페이지처럼 작동합니다. 그래서 nextCache를 넣어줫던 것이고. 빌드 후 home 페이지가 다이나믹으로 할지 static으로 할지는 강의처럼 본인이 정하셔서 만약 다이나믹으로 했는데 데이터 불러오는 작업을 cache하고 싶으시다면 그때 nextCache를 적용하시면 됩니다.
+
+Route Segment Config
+
+https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config
