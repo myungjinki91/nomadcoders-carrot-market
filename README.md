@@ -4061,3 +4061,21 @@ https://nextjs.org/docs/app/building-your-application/routing/intercepting-route
 intercept route
 
 https://nextjs.org/docs/app/building-your-application/routing/intercepting-routes
+
+## 12.3 Parallel Routes
+
+이번에 할 것
+
+- Parallel Routes
+
+인상적인 내용
+
+- Parallel Route는 @로 시작해야 함
+- Layout에서 함께 렌더링. 그런데 왜 필요해?
+  - 컴포넌트로 분리해도 되지만, 로딩 스켈레톤에 쓰이기도함
+
+팁
+
+Parallel Routes
+
+https://nextjs.org/docs/app/building-your-application/routing/parallel-routes
