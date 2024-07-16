@@ -4317,3 +4317,49 @@ ISR === Incremental Static Regeneration.
 For this you can export `export const revalidate = 60` to re validate the page, you can combine that with `generateStaticParams` and `dynamicParams` and you are good to go.
 
 ```
+
+## 13.4 revalidateTag
+
+이번에 할 것
+
+- revalidateTag()
+
+인상적인 내용
+
+- 상세페이지에서 caching을 두개를 하는데, 한개만 된다!
+- nextCache는 알아서 param을 callback에 전달합니다.
+- tags는 유일하지 않아도 됩니다!
+
+코드
+
+- app/products/[id]/page.tsx
+
+```tsx
+const getCachedProduct = nextCache(getProduct, ["product-detail"], {
+  tags: ["product-detail", "xxxx"],
+});
+
+async function getProductTitle(id: number) {
+  console.log("title");
+  const product = await db.product.findUnique({
+    where: {
+      id,
+    },
+    select: {
+      title: true,
+    },
+  });
+  return product;
+}
+
+const getCachedProductTitle = nextCache(getProductTitle, ["product-title"], {
+  tags: ["product-title", "xxxx"],
+});
+
+export async function generateMetadata({ params }: { params: { id: string } }) {
+  const product = await getCachedProductTitle(Number(params.id));
+  return {
+    title: product?.title,
+  };
+}
+```
