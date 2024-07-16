@@ -17,6 +17,7 @@ export default function AddProduct() {
     register,
     handleSubmit,
     setValue,
+    setError,
     formState: { errors },
   } = useForm<ProductType>({
     resolver: zodResolver(productSchema),
@@ -38,7 +39,7 @@ export default function AddProduct() {
       setUploadUrl(uploadURL);
       setValue(
         "photo",
-        `https://imagedelivery.net/aSbksvJjax-AUC7qVnaC4A/${id}`
+        `https://imagedelivery.net/u_qCG_VCNid3SXaUDHw-5Q/${id}`
       );
     }
   };
@@ -60,7 +61,10 @@ export default function AddProduct() {
     formData.append("price", data.price + "");
     formData.append("description", data.description);
     formData.append("photo", data.photo);
-    return uploadProduct(formData);
+    const errors = await uploadProduct(formData);
+    if (errors) {
+      // setError("");
+    }
   });
   const onValid = async () => {
     await onSubmit();

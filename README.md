@@ -3987,3 +3987,18 @@ https://react-hook-form.com
 ```
 
 https://www.npmjs.com/package/@hookform/resolvers
+
+## 11.9 Recap
+
+이번에 할 것
+
+- Input 수정
+  - React, forwardRef
+  - React, ForwardedRef
+- React Hook Form, setError
+
+인상적인 내용
+
+```tsx
+export type ProductType = z.infer<typeof productSchema>;
+```
