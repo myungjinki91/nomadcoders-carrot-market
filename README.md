@@ -4172,3 +4172,15 @@ export default function Modal({ params }: { params: { id: string } }) {
   );
 }
 ```
+
+# 13 CACHING
+
+## 13.0 Introduction
+
+인상적인 내용
+
+- 캐싱은 매우 중요!
+- Next.js에서 fetch는 caching됨.
+- 데이터베이스 response도 캐싱해보자. 데이터베이스를 매번 접근하면 안됨
+- generateMetadata
+- 데이터베이스를 여러 군데에서 접근할 것이고 같은 정보를 여러 번 줄 상황이 자주 생김
