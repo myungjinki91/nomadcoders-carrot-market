@@ -4017,3 +4017,29 @@ export type ProductType = z.infer<typeof productSchema>;
 - 기능 2개
   - Parallel Routes
   - Intercepting Routes
+
+## 12.1 Intercepting Routes
+
+이번에 할 것
+
+- app/(tabs)/home/(..)products/[id]/page.tsx
+
+인상적인 내용
+
+Intercepting Routes
+
+- app/(tabs)/home/(..)products/[id]/page.tsx 가 app/products/[id]/page.tsx를 intercept하지만, 새로고침하면 후자로 감
+
+(.) to match segments on the same level
+
+(..) to match segments one level above
+
+(..)(..) to match segments two levels above
+
+(...) to match segments from the root app directory
+
+팁
+
+Intercepting Routes
+
+https://nextjs.org/docs/app/building-your-application/routing/intercepting-routes
