@@ -4393,3 +4393,22 @@ const getCachedProduct = nextCache(getProduct, ["product-detail"], {
   tags: ["product-detail", "hello"],
 });
 ```
+
+## 13.6 Production Cache
+
+이번에 할 것
+
+- Next.js가 어떻게 caching하는지 배우는 시간
+
+인상적인 내용
+
+- Next.js는 어떻게 build할까?
+  - npm run build
+  - npm run start vs npm run dev
+- static과 dynamic의 차이
+  - 이 페이지는 누가 보는지에 따라 내용이 달라지나요? 네→ dynamic, 아니요 → static
+- /home 페이지는 DB를 접근하는데도 dynamic이 아니라 static이네요?
+  - DB를 사용하지만 쿠키, 헤더를 사용하지 않음
+  - 보는 사람에 따라 내용이 바뀌지 않음
+  - 초기 DB, API접근은 한번만 합니다. 바뀌면 그제서야 합니다.
+- /profile 페이지는 dynamic이네요?
