@@ -4104,3 +4104,23 @@ https://nextjs.org/docs/app/building-your-application/routing/parallel-routes#de
 
 - 진짜 되네????
 - 디렉토리 구조가 중요!!!
+
+## 12.6 Recap
+
+이번에 할 것
+
+인상적인 내용
+
+- 새로고침하면 모두 렌더링하지만, <Link>로 이동하면 children만 렌더링 됨
+
+```tsx
+/home
+  -> (..)products/[id]
+  -> (..)profile
+  -> (.)recent
+  /recent
+/profile
+/products/[id]
+```
+
+- slot이란 @이 붙은 폴더이며 이게 있으면 Layout은 props를 더 받음.
