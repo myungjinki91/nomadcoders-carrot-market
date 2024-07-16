@@ -4184,3 +4184,48 @@ export default function Modal({ params }: { params: { id: string } }) {
 - 데이터베이스 response도 캐싱해보자. 데이터베이스를 매번 접근하면 안됨
 - generateMetadata
 - 데이터베이스를 여러 군데에서 접근할 것이고 같은 정보를 여러 번 줄 상황이 자주 생김
+
+## 13.1 nextCache
+
+이번에 할 것
+
+- 캐싱 처음 사용해보기
+
+인상적인 내용
+
+```tsx
+import { getUser } from './data';
+import { unstable_cache } from 'next/cache';
+
+const getCachedUser = unstable_cache(
+  async (id) => getUser(id),
+  ['my-app-user']
+);
+
+export default async function Component({ userID }) {
+  const user = await getCachedUser(userID);
+  ...
+}
+```
+
+```tsx
+const data = unstable_cache(fetchData, keyParts, options)();
+```
+
+```
+import { unstable_cache as nextCache } from "next/cache";
+
+const getCachedProducts = nextCache(getInitialProducts, ["home-products"]);
+```
+
+- home-products에 데이터가 없으면 getInitialProducts 실행, 있으면 메모리에 저장된 값 사용
+- caching할지 말지도 구체적으로 지정할 수 있습니다
+- cache를 만료시키거나 시간 지나면 새로고침 할 수도 있습니다.
+
+팁
+
+unstable_cache
+
+https://nextjs.org/docs/app/api-reference/functions/unstable_cache
+
+개발 모드 && 브라우저의 개발자 도구를 open한 상태라면 unstable_cache가 캐싱 된 데이터를 반환하지 않고 db에 접근하는 함수를 매번 실행합니다!
