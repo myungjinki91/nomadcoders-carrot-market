@@ -4253,3 +4253,67 @@ const getCachedProducts = nextCache(getInitialProducts, ["home-products"], {
 팁
 
 - [\*\*Incremental Static Regeneration (ISR)](https://vercel.com/docs/incremental-static-regeneration)과 비슷?\*\*
+
+## 13.3 revalidatePath
+
+이번에 할 것
+
+- revalidatePath() 버튼 만들기
+
+인상적인 내용
+
+- /home과 연결되어있는 모든 데이터 새로고침해줘~ 가장 쉽다
+- 그러나 모든 cache가 새로고침되기 때문에 선택할 수 없다.
+
+코드
+
+- app/(tabs)/home/page.tsx
+
+```tsx
+export default async function Products() {
+  const initialProducts = await getCachedProducts();
+  const revalidate = async () => {
+    "use server";
+    revalidatePath("/home");
+  };
+  return (
+    <div>
+      <ProductList initialProducts={initialProducts} />
+      <form action={revalidate}>
+        <button>Revalidate</button>
+      </form>
+      <Link
+        href="/products/add"
+        className="bg-orange-500 flex items-center justify-center text-white size-16 rounded-full fixed bottom-24 right-8 hover:bg-orange-400 transition-colors"
+      >
+        <PlusIcon className="size-10" />
+      </Link>
+    </div>
+  );
+}
+```
+
+팁
+
+```tsx
+It is not a related to this section, However suddenly I just wondering...!
+
+I can't found any section for SSG and ISR.
+
+And according to my memory past course(NextJS 12 course) has sections for SSG and ISR.
+
+And Im not sure but I think SSR and ISR is so powerful and important feature in NextJS.
+
+So the reason why I can not found any section for SSG and ISR in this course is we can pretend kinda SSR and ISR by "Server Action" with "Unstable Cached" ??
+
+If yes, how can I implement !?
+```
+
+```tsx
+@jh0152park SSR === Server Side Rendering. To make the page be rendered in the server side you can just add `export const dynamic = "force-dynamic;` to your page. (we learn about this later in this section).
+
+ISR === Incremental Static Regeneration.
+
+For this you can export `export const revalidate = 60` to re validate the page, you can combine that with `generateStaticParams` and `dynamicParams` and you are good to go.
+
+```
