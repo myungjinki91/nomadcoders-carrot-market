@@ -4124,3 +4124,51 @@ https://nextjs.org/docs/app/building-your-application/routing/parallel-routes#de
 ```
 
 - slot이란 @이 붙은 폴더이며 이게 있으면 Layout은 props를 더 받음.
+
+## 12.7 Modal UI
+
+이번에 할 것
+
+- 코드챌린지
+  - loading skeleton
+  - 컴포넌트 분리
+  - 모달에서 사진 보기
+
+인상적인 내용
+
+- <button>은 use client를 사용해야하니까, 컴포넌트로 분리!
+- useRouter()
+- use client는 async 컴포넌트를 사용할 수 없음
+
+코드
+
+- app/(tabs)/home/@modal/(...)products/[id]/page.tsx
+
+```tsx
+"use client";
+
+import { PhotoIcon, XMarkIcon } from "@heroicons/react/24/solid";
+import { useRouter } from "next/navigation";
+
+export default function Modal({ params }: { params: { id: string } }) {
+  const router = useRouter();
+  const onCloseClick = () => {
+    router.back();
+  };
+  return (
+    <div className="absolute w-full h-full z-50 flex items-center justify-center bg-black bg-opacity-60 left-0 top-0">
+      <button
+        onClick={onCloseClick}
+        className="absolute right-5 top-5 text-neutral-200"
+      >
+        <XMarkIcon className="size-10" />
+      </button>
+      <div className="max-w-screen-sm h-1/2  flex justify-center w-full">
+        <div className="aspect-square  bg-neutral-700 text-neutral-200  rounded-md flex justify-center items-center">
+          <PhotoIcon className="h-28" />
+        </div>
+      </div>
+    </div>
+  );
+}
+```
