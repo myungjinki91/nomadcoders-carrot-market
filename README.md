@@ -4229,3 +4229,27 @@ unstable_cache
 https://nextjs.org/docs/app/api-reference/functions/unstable_cache
 
 개발 모드 && 브라우저의 개발자 도구를 open한 상태라면 unstable_cache가 캐싱 된 데이터를 반환하지 않고 db에 접근하는 함수를 매번 실행합니다!
+
+## 13.2 revalidate
+
+이번에 할 것
+
+- revalidate, 갱신
+
+인상적인 내용
+
+- 데이터베이스 쿼리는 비싸다
+- revalidate를 설정했다고 60초마다 호출하지 않는다!
+- 만료시간에 해당하는 내용
+
+코드
+
+```tsx
+const getCachedProducts = nextCache(getInitialProducts, ["home-products"], {
+  revalidate: 60,
+});
+```
+
+팁
+
+- [\*\*Incremental Static Regeneration (ISR)](https://vercel.com/docs/incremental-static-regeneration)과 비슷?\*\*
