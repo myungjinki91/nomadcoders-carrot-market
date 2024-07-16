@@ -4043,3 +4043,21 @@ Intercepting Routes
 Intercepting Routes
 
 https://nextjs.org/docs/app/building-your-application/routing/intercepting-routes
+
+## 12.2 Intercepting Recap
+
+이번에 할 것
+
+- Intercepting Routes test
+  - app/(tabs)/home/(.)recent/page.tsx
+  - app/(tabs)/home/recent/page.tsx
+
+인상적인 내용
+
+- 파일 시스템이 아니라, URL segment로 생각해야 합니다.
+
+팁
+
+intercept route
+
+https://nextjs.org/docs/app/building-your-application/routing/intercepting-routes
