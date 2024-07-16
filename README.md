@@ -4363,3 +4363,33 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
   };
 }
 ```
+
+## 13.5 fetch Cache
+
+이번에 할 것
+
+인상적인 내용
+
+- Next.js를 사용하면 데이터베이스를 사용하지 않고 API서버를 통해서 데이터를 받아옵니다. 이때 fetch는 쿠키나 헤더를 사용하지 않으면 자동으로 cache됩니다.
+- fetch에 revalidate, tag를 설정할 수도 있습니다.
+- 대부분은 Next.js를 사용할 때 외부 API를 사용하지 우리처럼 Prisma를 사용해서 db를 만들지 않습니다~
+
+코드
+
+- app/products/[id]/page.tsx
+
+```tsx
+async function getProduct(id: number) {
+  fetch("https://api.com", {
+    next: {
+      revalidate: 60,
+      tags: ["hello"],
+    },
+  });
+}
+
+const getCachedProduct = nextCache(getProduct, ["product-detail"], {
+  revalidate: 60,
+  tags: ["product-detail", "hello"],
+});
+```
