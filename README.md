@@ -4093,3 +4093,14 @@ https://nextjs.org/docs/app/building-your-application/routing/parallel-routes
 팁
 
 https://nextjs.org/docs/app/building-your-application/routing/parallel-routes#defaultjs
+
+## 12.5 Modal Route
+
+이번에 할 것
+
+- 실제 Modal만들 예정! CSS는 빼고
+
+인상적인 내용
+
+- 진짜 되네????
+- 디렉토리 구조가 중요!!!
