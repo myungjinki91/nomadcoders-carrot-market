@@ -3814,3 +3814,22 @@ export default function AddProduct() {
   const [state, action] = useFormState(interceptAction, null);
   return (
 ```
+
+## 11.6 Variants
+
+이번에 할 것
+
+- Cloudflare image variant
+- Cloudflare image flex varient
+
+인상적인 내용
+
+코드
+
+```tsx
+src={`${photo}/width=100,height=100`}
+```
+
+팁
+
+https://developers.cloudflare.com/images/transform-images/transform-via-url/
