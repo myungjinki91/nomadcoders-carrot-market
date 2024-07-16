@@ -4002,3 +4002,18 @@ https://www.npmjs.com/package/@hookform/resolvers
 ```tsx
 export type ProductType = z.infer<typeof productSchema>;
 ```
+
+# 12 MODALS
+
+## 12.0 Introduction
+
+이번에 할 것
+
+- 두 개의 멋진 기능을 사용해서 NextJS에서 모달 구현
+
+인상적인 내용
+
+- 모달이란 팝업과 비슷하다. 그런데 URL이 바뀜!
+- 기능 2개
+  - Parallel Routes
+  - Intercepting Routes
