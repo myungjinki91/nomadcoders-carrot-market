@@ -4489,3 +4489,38 @@ https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config
 generateStaticParams
 
 https://nextjs.org/docs/app/api-reference/functions/generate-static-params
+
+## 13.11 dynamicParams
+
+이번에 할 것
+
+- generateStaticParams으로 prerendering했는데, 새로 product를 추가했다면….?
+
+인상적인 내용
+
+- 새로운 아이템을 추가하면 자동으로 처음만 DB에 접근하고 이후에는 pre generated html을 응답합니다.
+
+```tsx
+export const dynamicParams = true;
+```
+
+- 아래는 왜 사용할까요?
+
+```tsx
+export const dynamicParams = false;
+```
+
+- 가~~~ 끔 사용한다고 합니다.
+
+팁
+
+```tsx
+Insane🔥🔥🔥
+I really really love this section.
+
+Honestly I dont know well about SSG, ISR yet cuz I almost sleeping when I watchced NextJS 12 version course However I fell like can pretend SSG, ISR with Route Segment Configs and generateStaticParams.
+
+I really really love this section!
+
+Thanks a lot and congratulation again to being father!! 🎉
+```
