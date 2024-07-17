@@ -4362,6 +4362,11 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
     title: product?.title,
   };
 }
+
+const revalidate = async () => {
+  "use server";
+  revalidateTag("xxxx");
+};
 ```
 
 ## 13.5 fetch Cache
