@@ -4524,3 +4524,18 @@ I really really love this section!
 
 Thanks a lot and congratulation again to being father!! 🎉
 ```
+
+## 13.12 Code Challenge
+
+이번에 할 것
+
+- /home과 제품 업로드를 연결 caching
+  - 하고싶은 caching 전략을 정하고 제품 업로 server action과 연결해주자.
+  - 제품 디테일 페이지와도 해주자
+- 제품 편집 페이지 만들기
+  - 편집 중 새로고침 했을 때
+
+팁
+
+- https://github.com/devgony/carrot-market/commit/05efa740940d8982d3bea88270286bd52b60e3f3
+- https://github.com/daehyeong2/carrot-market/commit/ae8755178e270e8c519647a9618ab6314d1e34a4
