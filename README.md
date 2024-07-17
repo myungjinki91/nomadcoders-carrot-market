@@ -4459,3 +4459,12 @@ https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config
 - Next.js에서만 fetch의 두 번째 인자로 next옵션을 줄 수 있습니다.
 - POST, Cookie, DB접근을 한다면 Cache를 고려해야 합니다.
 - fetch를 사용한 자동 cache와 nextCache의 차이점
+
+## 13.9 Recap part Two
+
+인상적인 내용
+
+- 전체 프로젝트 관점에서 캐싱
+- Server Side Rendering을 무서워 할 필요가 없다. <Suspense>를 사용하면 좋다.
+- 모든 것을 Static으로 만들 필요가 없다. <Suspense>를 사용하면 되니까
+- 기본은 최대한 많이 caching하는 것
