@@ -4468,3 +4468,24 @@ https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config
 - Server Side Rendering을 무서워 할 필요가 없다. <Suspense>를 사용하면 좋다.
 - 모든 것을 Static으로 만들 필요가 없다. <Suspense>를 사용하면 되니까
 - 기본은 최대한 많이 caching하는 것
+
+## 13.10 generateStaticParams
+
+이번에 할 것
+
+- generateStaticParams
+
+인상적인 내용
+
+- id가 뭐가 올지 안다면 미리 rendering해달라고 할 수 있다!
+- cookie를 사용하면 prerender를 사용할 수 없다.
+- SSG
+- 책임감 있게 사용해야 합니다. DB에 10000개 있다면…?!
+
+코드
+
+팁
+
+generateStaticParams
+
+https://nextjs.org/docs/app/api-reference/functions/generate-static-params
