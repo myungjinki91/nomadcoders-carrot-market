@@ -4539,3 +4539,62 @@ Thanks a lot and congratulation again to being father!! 🎉
 
 - https://github.com/devgony/carrot-market/commit/05efa740940d8982d3bea88270286bd52b60e3f3
 - https://github.com/daehyeong2/carrot-market/commit/ae8755178e270e8c519647a9618ab6314d1e34a4
+
+# 14 OPTIMISTIC UPDATES
+
+## 14.0 Introduction
+
+이번에 할 것
+
+- 모델 생성
+
+인상적인 내용
+
+- useOptimistic()
+- mutation
+- 실제로 빠르진 않더라도 빠르게 보이는 방법을 배울 것임.
+- composite Id
+  - like는 유저가 포스트에 1개만 누를 수 있음
+  - @@id(name: "id", [userId, postId])
+
+코드
+
+- prisma/schema.prisma
+
+```
+model Post {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String?
+  views       Int       @default(0)
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+  user        User      @relation(fields: [userId], references: [id])
+  userId      Int
+  Comment     Comment[]
+  Like        Like[]
+}
+
+model Comment {
+  id         Int      @id @default(autoincrement())
+  payload    String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id])
+  post       Post     @relation(fields: [postId], references: [id])
+  userId     Int
+  postId     Int
+}
+
+model Like {
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id])
+  post       Post     @relation(fields: [postId], references: [id])
+  userId     Int
+  postId     Int
+
+  @@id(name: "id", [userId, postId])
+}
+
+```
