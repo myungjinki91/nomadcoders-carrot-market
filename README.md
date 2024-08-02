@@ -5560,3 +5560,32 @@ useEffect(() => {
 ---
 
 저도 똑같이 그래서 chatRoom에 productId를 넣어버렸어요. 생성하기 전에 이 product에 user id, session id 같이 있는 chatRoom이 있으면 생성하지 않고 거기로 이동시키는 방식으로~!
+
+## 15.5 Supabase Broadcast
+
+### 이번에 할 것
+
+- supabase subscribe
+
+### 인상적인 내용
+
+- useRef는 아주 유용합니다! 컴포넌트 내에서 여러 함수에서 변수를 사용하고 싶다면 useRef
+- channel.send
+- channel.on
+- channel.subscribe
+
+### 코드
+
+```tsx
+const channel = useRef<RealtimeChannel>();
+```
+
+### 팁
+
+Multiple GoTrueClient instances detected in the same browser context
+
+- -->
+
+인스턴스 중복에 의한 문제.
+
+const client = createClient 를 함수 밖에 선언 하면 됩니다.
