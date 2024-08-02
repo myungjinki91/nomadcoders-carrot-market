@@ -6073,3 +6073,39 @@ Private Folders
 Private 폴더는 폴더 앞에 밑줄(\_folderName)을 붙여 생성할 수 있습니다.
 
 https://nextjs.org/docs/app/building-your-application/routing/colocation#private-folders
+
+## 17.3 Catch All Segments
+
+### 이번에 할 것
+
+- [**Catch-all Segments**](https://nextjs.org/docs/app/building-your-application/routing/dynamic-routes#catch-all-segments)
+- [**Optional Catch-all Segments**](https://nextjs.org/docs/app/building-your-application/routing/dynamic-routes#optional-catch-all-segments)
+
+### 인상적인 내용
+
+- app/extras/[...potato]/page.tsx
+- app/extras/[[...potato]]/page.tsx
+
+### 코드
+
+- app/extras/[[...potato]]/page.tsx
+
+```tsx
+export default function Extras({ params }: { params: { potato: string[] } }) {
+  console.log(params);
+  return (
+    <div className="flex flex-col gap-3 py-10">
+      <h1 className="text-6xl font-metallica">Extras!</h1>
+      <h2 className="font-roboto">So much more to learn!</h2>
+    </div>
+  );
+}
+```
+
+### 팁
+
+Catch-all Segments
+
+대괄호 [...folderName] 안에 줄임표를 추가하면 동적 세그먼트를 모든 후속 세그먼트로 확장할 수 있습니다.
+
+https://nextjs.org/docs/app/building-your-application/routing/dynamic-routes#catch-all-segments
