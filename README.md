@@ -6109,3 +6109,78 @@ Catch-all Segments
 대괄호 [...folderName] 안에 줄임표를 추가하면 동적 세그먼트를 모든 후속 세그먼트로 확장할 수 있습니다.
 
 https://nextjs.org/docs/app/building-your-application/routing/dynamic-routes#catch-all-segments
+
+## 17.4 Logging
+
+### 이번에 할 것
+
+### 인상적인 내용
+
+- 대부분의 회사는 API서버를 따로 만듬. caching은 매우 중요! 데이터가 변경되었을 때 재검증 하는 것은 우리의 몫
+- 대부분은 prisma를 사용하지 않음
+
+### 코드
+
+- next.config.mjs
+
+```jsx
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  logging: {
+    fetches: {
+      fullUrl: true,
+    },
+  },
+  images: {
+    remotePatterns: [
+      {
+        hostname: "avatars.githubusercontent.com",
+      },
+      {
+        hostname: "imagedelivery.net",
+      },
+    ],
+  },
+};
+
+export default nextConfig;
+```
+
+- app/extras/page.tsx
+
+```tsx
+import { revalidatePath } from "next/cache";
+
+async function getData() {
+  const data = await fetch(
+    "https://nomad-movies.nomadcoders.workers.dev/movies"
+  );
+}
+
+export default async function Extras({
+  params,
+}: {
+  params: { potato: string[] };
+}) {
+  await getData();
+  const action = async () => {
+    "use server";
+    revalidatePath("/extras");
+  };
+  return (
+    <div className="flex flex-col gap-3 py-10">
+      <h1 className="text-6xl font-metallica">Extras!</h1>
+      <h2 className="font-roboto">So much more to learn!</h2>
+      <form action={action}>
+        <button>revalidate</button>
+      </form>
+    </div>
+  );
+}
+```
+
+### 팁
+
+https://nextjs.org/docs/app/api-reference/next-config-js/logging
+
+Reload your current page, ignoring cached content ⌘ + Shift + r
