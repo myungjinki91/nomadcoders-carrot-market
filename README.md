@@ -5732,3 +5732,108 @@ export async function saveMessage(payload: string, chatRoomId: string) {
   });
 }
 ```
+
+# 16 LIVE STREAMING
+
+## 16.0 Introduction
+
+### 이번에 할 것
+
+### 인상적인 내용
+
+- Cloudflare Stream
+- 트위치 유튜브를 너무 쉽게 만들 수 있어요
+- https://developers.cloudflare.com/stream/stream-live
+- $6 필요
+
+## 16.1 Live Input
+
+### 이번에 할 것
+
+- Cloudflare stream 사용
+- OBS 스트리밍 서비스
+
+### 인상적인 내용
+
+https://developers.cloudflare.com/stream/get-started/
+
+https://developers.cloudflare.com/stream/stream-live/start-stream-live/
+
+### 코드
+
+- app/streams/add/page.tsx
+
+```tsx
+"use client";
+
+import Button from "@/components/button";
+import Input from "@/components/input";
+import { useFormState } from "react-dom";
+import { startStream } from "./action";
+
+export default function AddStream() {
+  const [state, action] = useFormState(startStream, null);
+  return (
+    <form className="p-5 flex flex-col gap-2" action={action}>
+      <Input
+        name="title"
+        required
+        placeholder="Title or your stream."
+        errors={state?.formErrors}
+      />
+      <Button text="Start streaming" />
+    </form>
+  );
+}
+```
+
+- app/streams/add/action.ts
+
+```tsx
+"use server";
+
+import db from "@/lib/db";
+import getSession from "@/lib/session";
+import { redirect } from "next/navigation";
+import { z } from "zod";
+
+const title = z.string();
+
+export async function startStream(_: any, formData: FormData) {
+  const results = title.safeParse(formData.get("title"));
+  if (!results.success) {
+    return results.error.flatten();
+  }
+  const response = await fetch(
+    `https://api.cloudflare.com/client/v4/accounts/${process.env.CLOUDFLARE_ACCOUNT_ID}/stream/live_inputs`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${process.env.CLOUDFLARE_API_KEY}`,
+      },
+      body: JSON.stringify({
+        meta: {
+          name: results.data,
+        },
+        recording: {
+          mode: "automatic",
+        },
+      }),
+    }
+  );
+  const data = await response.json();
+  const session = await getSession();
+  const stream = await db.liveStream.create({
+    data: {
+      title: results.data,
+      stream_id: data.result.uid,
+      stream_key: data.result.rtmps.streamKey,
+      userId: session.id!,
+    },
+    select: {
+      id: true,
+    },
+  });
+  redirect(`/streams/${stream.id}`);
+}
+```
