@@ -5018,3 +5018,259 @@ export default async function PostDetail({
   );
 }
 ```
+
+## 14.4 useOptimistic
+
+### 이번에 할 것
+
+- React useOptimistic 사용
+- action, button 분리
+
+### 인상적인 내용
+
+- 유저가 데이터를 보내주면 거기에 맞게 데이터베이스를 수정하는 것이 mutation
+  - 두 가지 옵션
+    - 백엔드가 끝날 때까지 기다리기
+    - like, dislike는 중요하지 않아서 굳이 다 끝날 때까지 기다릴 필요 없이 optimistic response를 주자
+      - 성공한 것처럼 UI를 변경
+        - 엄청 많이 사용함!!!
+
+```tsx
+[optimisticState, addOptimistic] = useOptimistic(state, updateFn);
+```
+
+state: 기존 state
+
+optimisticState: 임시로 보여줄 state
+
+addOptimistic: 시간이 좀 걸리는 action trigger
+
+updateFn: ???
+
+### 코드
+
+- app/posts/[id]/page.tsx
+
+```tsx
+import db from "@/lib/db";
+import getSession from "@/lib/session";
+import { formatToTimeAgo } from "@/lib/utils";
+import { EyeIcon, HandThumbUpIcon } from "@heroicons/react/24/solid";
+import { HandThumbUpIcon as OutlineHandThumbUpIcon } from "@heroicons/react/24/outline";
+import { unstable_cache as nextCache, revalidateTag } from "next/cache";
+import Image from "next/image";
+import { notFound } from "next/navigation";
+import LikeButton from "@/components/like-button";
+
+async function getPost(id: number) {
+  try {
+    const post = await db.post.update({
+      where: {
+        id,
+      },
+      data: {
+        views: {
+          increment: 1,
+        },
+      },
+      include: {
+        user: {
+          select: {
+            username: true,
+            avatar: true,
+          },
+        },
+        _count: {
+          select: {
+            comments: true,
+          },
+        },
+      },
+    });
+    return post;
+  } catch (e) {
+    return null;
+  }
+}
+
+const getCachedPost = nextCache(getPost, ["post-detail"], {
+  tags: ["post-detail"],
+  revalidate: 60,
+});
+
+async function getLikeStatus(postId: number, userId: number) {
+  // const session = await getSession();
+  const isLiked = await db.like.findUnique({
+    where: {
+      id: {
+        postId,
+        userId: userId,
+      },
+    },
+  });
+  const likeCount = await db.like.count({
+    where: {
+      postId,
+    },
+  });
+  return {
+    likeCount,
+    isLiked: Boolean(isLiked),
+  };
+}
+
+async function getCachedLikeStatus(postId: number) {
+  const session = await getSession();
+  const userId = session.id;
+  const cachedOperation = nextCache(getLikeStatus, ["product-like-status"], {
+    tags: [`like-status-${postId}`],
+  });
+  return cachedOperation(postId, userId!);
+}
+
+export default async function PostDetail({
+  params,
+}: {
+  params: { id: string };
+}) {
+  const id = Number(params.id);
+  if (isNaN(id)) {
+    return notFound();
+  }
+  const post = await getCachedPost(id);
+  if (!post) {
+    return notFound();
+  }
+  const { likeCount, isLiked } = await getCachedLikeStatus(id);
+  return (
+    <div className="p-5 text-white">
+      <div className="flex items-center gap-2 mb-2">
+        <Image
+          width={28}
+          height={28}
+          className="size-7 rounded-full"
+          src={post.user.avatar!}
+          alt={post.user.username}
+        />
+        <div>
+          <span className="text-sm font-semibold">{post.user.username}</span>
+          <div className="text-xs">
+            <span>{formatToTimeAgo(post.created_at.toString())}</span>
+          </div>
+        </div>
+      </div>
+      <h2 className="text-lg font-semibold">{post.title}</h2>
+      <p className="mb-5">{post.description}</p>
+      <div className="flex flex-col gap-5 items-start">
+        <div className="flex items-center gap-2 text-neutral-400 text-sm">
+          <EyeIcon className="size-5" />
+          <span>조회 {post.views}</span>
+        </div>
+        <LikeButton isLiked={isLiked} likeCount={likeCount} postId={id} />
+      </div>
+    </div>
+  );
+}
+```
+
+- app/posts/[id]/actions.ts
+
+```tsx
+"use server";
+
+import db from "@/lib/db";
+import getSession from "@/lib/session";
+import { revalidateTag } from "next/cache";
+
+export async function likePost(postId: number) {
+  await new Promise((r) => setTimeout(r, 10000));
+  const session = await getSession();
+  try {
+    await db.like.create({
+      data: {
+        postId,
+        userId: session.id!,
+      },
+    });
+    revalidateTag(`like-status-${postId}`);
+  } catch (e) {}
+}
+
+export async function dislikePost(postId: number) {
+  await new Promise((r) => setTimeout(r, 10000));
+  try {
+    const session = await getSession();
+    await db.like.delete({
+      where: {
+        id: {
+          postId,
+          userId: session.id!,
+        },
+      },
+    });
+    revalidateTag(`like-status-${postId}`);
+  } catch (e) {}
+}
+```
+
+- components/like-button.tsx
+
+```tsx
+"use client";
+
+import { HandThumbUpIcon } from "@heroicons/react/24/solid";
+import { HandThumbUpIcon as OutlineHandThumbUpIcon } from "@heroicons/react/24/outline";
+import { useOptimistic } from "react";
+import { dislikePost, likePost } from "@/app/posts/[id]/actions";
+
+interface LikeButtonProps {
+  isLiked: boolean;
+  likeCount: number;
+  postId: number;
+}
+
+export default function LikeButton({
+  isLiked,
+  likeCount,
+  postId,
+}: LikeButtonProps) {
+  const [state, reducerFn] = useOptimistic(
+    { isLiked, likeCount },
+    (previousState, payload) => ({
+      isLiked: !previousState.isLiked,
+      likeCount: previousState.isLiked
+        ? previousState.likeCount - 1
+        : previousState.likeCount + 1,
+    })
+  );
+  const onClick = async () => {
+    reducerFn(undefined);
+    if (isLiked) {
+      await dislikePost(postId);
+    } else {
+      await likePost(postId);
+    }
+  };
+  return (
+    <button
+      onClick={onClick}
+      className={`flex items-center gap-2 text-neutral-400 text-sm border border-neutral-400 rounded-full p-2  transition-colors ${
+        state.isLiked
+          ? "bg-orange-500 text-white border-orange-500"
+          : "hover:bg-neutral-800"
+      }`}
+    >
+      {state.isLiked ? (
+        <HandThumbUpIcon className="size-5" />
+      ) : (
+        <OutlineHandThumbUpIcon className="size-5" />
+      )}
+      {state.isLiked ? (
+        <span> {state.likeCount}</span>
+      ) : (
+        <span>공감하기 ({state.likeCount})</span>
+      )}
+    </button>
+  );
+}
+```
