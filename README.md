@@ -5693,3 +5693,42 @@ useEffect(() => {
   };
 }, [chatRoomId]);
 ```
+
+## 15.7 Code Challenge
+
+### 이번에 할 것
+
+- 새로고침하면 사라는 것을 해결
+- 챌린지
+  - 채팅 탭 구현
+    - 모든 채팅방 리스트 보여주기
+    - 내가 대화하고 있는 채팅방과 아바타 그리고 최신 메시지 보여주기
+  - 읽지 않은 채팅방이 어느 것인지
+  - 읽은 채팅방은 어떤 것이고
+
+### 인상적인 내용
+
+### 코드
+
+- app/chats/action.ts
+
+```tsx
+"use server";
+
+import db from "@/lib/db";
+import getSession from "@/lib/session";
+
+export async function saveMessage(payload: string, chatRoomId: string) {
+  const session = await getSession();
+  await db.message.create({
+    data: {
+      payload,
+      chatRoomId,
+      userId: session.id!,
+    },
+    select: {
+      id: true,
+    },
+  });
+}
+```
