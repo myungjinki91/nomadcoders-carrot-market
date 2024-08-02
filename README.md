@@ -5940,3 +5940,122 @@ export default async function StreamDetail({
   );
 }
 ```
+
+# 17 NEXTJS EXTRAS
+
+## 17.0 Introduction
+
+### 인상적인 내용
+
+- 모두 다른 내용임
+- 니코는 프레임워크를 사용하면 프레임워크가 지원하는 기능을 최대한 활용하려고 노력함
+
+## 17.1 Fonts
+
+### 이번에 할 것
+
+- 구글 폰트 로컬 폰트
+
+### 인상적인 내용
+
+https://nextjs.org/docs/app/building-your-application/optimizing/fonts
+
+https://nextjs.org/docs/app/building-your-application/optimizing/fonts#with-tailwind-css
+
+### 코드
+
+- tailwind.config.ts
+
+```tsx
+import type { Config } from "tailwindcss";
+
+const config: Config = {
+  content: [
+    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
+  theme: {
+    extend: {
+      fontFamily: {
+        roboto: "var(--roboto-text)",
+        rubick: "var(--rubick-text)",
+        metallica: "var(--metallica-text)",
+      },
+      margin: {
+        tomato: "120px",
+      },
+      borderRadius: {
+        "sexy-name": "11.11px",
+      },
+    },
+  },
+  plugins: [require("@tailwindcss/forms")],
+};
+export default config;
+```
+
+- app/layout.tsx
+
+```tsx
+import type { Metadata } from "next";
+import { Roboto, Rubik_Scribble } from "next/font/google";
+import localFont from "next/font/local";
+import "./globals.css";
+
+const roboto = Roboto({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  style: ["normal"],
+  variable: "--roboto-text",
+});
+
+const rubick = Rubik_Scribble({
+  weight: "400",
+  style: ["normal"],
+  subsets: ["latin"],
+  variable: "--rubick-text",
+});
+
+const metallica = localFont({
+  src: "./metallica.ttf",
+  variable: "--metallica-text",
+});
+
+export const metadata: Metadata = {
+  title: {
+    template: "%s | Karrot Market",
+    default: "Karrot Market",
+  },
+  description: "Sell and buy all the things!",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en">
+      <body
+        className={`${roboto.variable} ${rubick.variable} ${metallica.variable} bg-neutral-900 text-white max-w-screen-sm mx-auto`}
+      >
+        {children}
+      </body>
+    </html>
+  );
+}
+```
+
+- app/extras/page.tsx
+
+```tsx
+export default function Extras() {
+  return (
+    <div className="flex flex-col gap-3 py-10">
+      <h1 className="text-6xl font-metallica">Extras!</h1>
+      <h2 className="font-roboto">So much more to learn!</h2>
+    </div>
+  );
+}
+```
