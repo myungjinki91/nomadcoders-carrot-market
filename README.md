@@ -5508,3 +5508,55 @@ export default function ChatMessagesList({
   );
 }
 ```
+
+## 15.4 Realtime Channel
+
+### 이번에 할 것
+
+- 메시지 입력 기능 추가
+- 가짜 메시지 출력
+- supabase
+
+### 인상적인 내용
+
+- https://supabase.com/docs/guides/realtime/broadcast
+
+### 코드
+
+- components/input.tsx
+
+```tsx
+const onSubmit = (event: React.FormEvent) => {
+  event.preventDefault();
+  setMessages((prevMsgs) => [
+    ...prevMsgs,
+    {
+      id: Date.now(),
+      payload: message,
+      created_at: new Date(),
+      userId,
+      user: {
+        username: "string",
+        avatar: "xxx",
+      },
+    },
+  ]);
+  setMessage("");
+};
+useEffect(() => {
+  const client = createClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY);
+  console.log(client);
+  const channel = client.channel(`room-${chatRoomId}`);
+  channel.on("broadcast", { event: "message" }, (payload) => {
+    console.log(payload);
+  });
+}, [chatRoomId]);
+```
+
+### 팁
+
+채팅방 만들고 주소 저장해 놔야 합니다 ~! 뒤로 가기 했다가 누르면 채팅방 채팅방 추가로 만들어 져서 메세지 사라 집니다
+
+---
+
+저도 똑같이 그래서 chatRoom에 productId를 넣어버렸어요. 생성하기 전에 이 product에 user id, session id 같이 있는 chatRoom이 있으면 생성하지 않고 거기로 이동시키는 방식으로~!
