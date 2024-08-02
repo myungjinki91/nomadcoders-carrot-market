@@ -5274,3 +5274,60 @@ export default function LikeButton({
   );
 }
 ```
+
+# 15 REALTIME CHAT
+
+## 15.0 Introduction
+
+### 인상적인 내용
+
+- supabase보다 cloudflare가 더 좋음
+
+## 15.1 Models
+
+### 이번에 할 것
+
+- chatRoom, message 모델 만들기
+
+### 인상적인 내용
+
+- cuid
+
+### 코드
+
+- prisma/schema.prisma
+
+```
+model ChatRoom {
+  id    String @id @default(cuid())
+  users User[]
+
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  Message    Message[]
+}
+
+model Message {
+  id      Int    @id @default(autoincrement())
+  payload String
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  room       ChatRoom @relation(fields: [chatRoomId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
+  chatRoomId String
+  userId     Int
+}
+
+```
+
+### 팁
+
+CUID
+
+https://www.prisma.io/docs/orm/reference/prisma-schema-reference#cuid
+
+https://github.com/paralleldrive/cuid
+
+https://github.com/paralleldrive/cuid2
