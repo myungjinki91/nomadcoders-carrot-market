@@ -5331,3 +5331,14 @@ https://www.prisma.io/docs/orm/reference/prisma-schema-reference#cuid
 https://github.com/paralleldrive/cuid
 
 https://github.com/paralleldrive/cuid2
+
+## 15.2 Chat Room
+
+### 이번에 할 것
+
+- chat 페이지 만들기
+- chat 버튼 구현
+
+### 인상적인 내용
+
+- use server를 사용한다면 파일로 분리하자
