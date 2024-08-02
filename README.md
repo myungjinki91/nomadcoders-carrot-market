@@ -6059,3 +6059,17 @@ export default function Extras() {
   );
 }
 ```
+
+## 17.2 Private Folders
+
+### 이번에 할 것
+
+- Private Folders
+
+### 팁
+
+Private Folders
+
+Private 폴더는 폴더 앞에 밑줄(\_folderName)을 붙여 생성할 수 있습니다.
+
+https://nextjs.org/docs/app/building-your-application/routing/colocation#private-folders
