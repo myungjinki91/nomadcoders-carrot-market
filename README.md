@@ -5589,3 +5589,107 @@ Multiple GoTrueClient instances detected in the same browser context
 인스턴스 중복에 의한 문제.
 
 const client = createClient 를 함수 밖에 선언 하면 됩니다.
+
+## 15.6 Realtime Messages
+
+### 이번에 할 것
+
+- 메시지에 유저이름과 아바타도 보내기
+- 소켓으로 받은 메시지 state 반영
+
+### 인상적인 내용
+
+- 챌린지
+  - getUserProfile 캐싱
+
+### 코드
+
+- app/chats/[id]/page.tsx
+
+```tsx
+async function getUserProfile() {
+  const session = await getSession();
+  const user = await db.user.findUnique({
+    where: {
+      id: session.id!,
+    },
+    select: {
+      username: true,
+      avatar: true,
+    },
+  });
+  return user;
+}
+
+export type InitialChatMessages = Prisma.PromiseReturnType<typeof getMessages>;
+
+export default async function ChatRoom({ params }: { params: { id: string } }) {
+  const room = await getRoom(params.id);
+  if (!room) {
+    return notFound();
+  }
+  const initialMessages = await getMessages(params.id);
+  const session = await getSession();
+  const user = await getUserProfile();
+  if (!user) {
+    return notFound();
+  }
+  return (
+    <ChatMessagesList
+      chatRoomId={params.id}
+      userId={session.id!}
+      username={user.username}
+      avatar={user.avatar!}
+      initialMessages={initialMessages}
+    />
+  );
+}
+```
+
+- components/chat-messages-list.tsx
+
+```tsx
+const onSubmit = (event: React.FormEvent) => {
+  event.preventDefault();
+  setMessages((prevMsgs) => [
+    ...prevMsgs,
+    {
+      id: Date.now(),
+      payload: message,
+      created_at: new Date(),
+      userId,
+      user: {
+        username: "string",
+        avatar: "xxx",
+      },
+    },
+  ]);
+  channel.current?.send({
+    type: "broadcast",
+    event: "message",
+    payload: {
+      id: Date.now(),
+      payload: message,
+      created_at: new Date(),
+      userId,
+      user: {
+        username,
+        avatar,
+      },
+    },
+  });
+  setMessage("");
+};
+useEffect(() => {
+  const client = createClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY);
+  channel.current = client.channel(`room-${chatRoomId}`);
+  channel.current
+    .on("broadcast", { event: "message" }, (payload) => {
+      setMessages((prevMsgs) => [...prevMsgs, payload.payload]);
+    })
+    .subscribe();
+  return () => {
+    channel.current?.unsubscribe();
+  };
+}, [chatRoomId]);
+```
