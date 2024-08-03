@@ -6291,3 +6291,27 @@ experimental_taintObjectReference
 특정 객체 인스턴스가 사용자 객체와 같은 클라이언트 컴포넌트에 전달되는 것을 방지할 수 있습니다.
 
 https://react.dev/reference/react/experimental_taintObjectReference
+
+## 17.6 Images
+
+### 이번에 할 것
+
+- 이미지 추가 기능
+
+### 인상적인 내용
+
+- 로컬 이미지 blur
+- <Image placeholder=”” />
+- base64 encoded image
+
+### 팁
+
+Base64 Image
+
+https://www.base64-image.de
+
+---
+
+https://nextjs.org/docs/app/api-reference/components/image#placeholder
+
+https://nextjs.org/docs/app/api-reference/components/image#blurdataurl
