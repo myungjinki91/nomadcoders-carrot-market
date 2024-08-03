@@ -6184,3 +6184,110 @@ export default async function Extras({
 https://nextjs.org/docs/app/api-reference/next-config-js/logging
 
 Reload your current page, ignoring cached content ⌘ + Shift + r
+
+## 17.5 Security
+
+### 이번에 할 것
+
+- 보안 관련 내용
+
+### 인상적인 내용
+
+- 보안은 정말 어렵다. 경계가 흐릿
+- React, Next 모두 실수 방지 기능을 제공한다.
+- experimental_taintObjectReference: 클라이언트로 특정 오브젝트가 전달되면 에러 발생
+- experimental_taintUniqueValue: 클라이언트로 특정 데이터가 전달되면 에러 발생
+- server-only package: 클라이언트 컴포넌트가 호출하는 것을 방지하기 위한 패키지
+
+### 코드
+
+- next.config.mjs
+
+```jsx
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  experimental: {
+    taint: true,
+  },
+  images: {
+    remotePatterns: [
+      {
+        hostname: "avatars.githubusercontent.com",
+      },
+      {
+        hostname: "imagedelivery.net",
+      },
+    ],
+  },
+};
+
+export default nextConfig;
+```
+
+- app/extras/page.tsx
+
+```tsx
+import HackedComponent from "@/components/hacked-component";
+import {
+  experimental_taintObjectReference,
+  experimental_taintUniqueValue,
+} from "react";
+
+async function getData() {
+  const keys = {
+    apiKey: "11191119",
+    secret: "10101001",
+  };
+  // experimental_taintObjectReference("API Keys were leaked!!!", keys);
+  experimental_taintUniqueValue("Secret key was exposed", keys, keys.secret);
+  return keys;
+}
+
+export default async function Extras({
+  params,
+}: {
+  params: { potato: string[] };
+}) {
+  const data = await getData();
+  return (
+    <div className="flex flex-col gap-3 py-10">
+      <h1 className="text-6xl">Extras!</h1>
+      <h2 className="font-roboto">So much more to learn!</h2>
+      <HackedComponent data={data} />
+    </div>
+  );
+}
+```
+
+- components/hacked-component.tsx
+
+```tsx
+"use client";
+
+import { fetchFromAPI } from "@/app/extras/actions";
+
+export default function HackedComponent({ data }: any) {
+  fetchFromAPI();
+  return <h1>hacked</h1>;
+}
+```
+
+- app/extras/actions.ts
+
+```tsx
+"use server";
+
+import "server-only";
+
+export function fetchFromAPI() {
+  fetch("......");
+}
+```
+
+### 팁
+
+experimental_taintObjectReference
+
+특정 객체 인스턴스가 사용자 객체와 같은 클라이언트 컴포넌트에 전달되는 것을 방지할 수 있습니다.
+
+https://react.dev/reference/react/experimental_taintObjectReference
